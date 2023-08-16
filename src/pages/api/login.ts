@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { TRootResponseData } from "@/types/root-types";
 import { comparePassword } from "@/utils/auth-utils/auth-utils";
 import { signToken } from "@/utils/auth-utils/jwt";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -14,10 +15,10 @@ interface TRegisterApiRequest extends NextApiRequest {
 
 export default async function handler(
   req: TRegisterApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<TRootResponseData<string>>
 ) {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
+    return res.send({ message: "Метод не разрешён", success: false });
   }
 
   const { name, password } = req.body;
@@ -29,24 +30,27 @@ export default async function handler(
       },
     });
 
-    console.log(user);
-
     if (!user) {
-      return res.send({ message: "User not found" });
+      return res.send({ message: "Пользователь не найден", success: false });
     }
 
     const passwordMatch = await comparePassword(password, user.password);
 
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Authentication failed" });
+      return res.send({ message: "Пароль неверный", success: false });
     }
 
     const token = signToken({ userId: user.id });
 
-    return res
-      .status(200)
-      .json({ data: token, message: "Authentication success" });
+    return res.send({
+      data: token,
+      message: "Авторизация прошла успешно",
+      success: true,
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.send({
+      message: "Непредвиденная ошибка сервера",
+      success: false,
+    });
   }
 }

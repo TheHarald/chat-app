@@ -59,7 +59,7 @@ function Input(props: InputProps) {
         type={type}
         placeholder={placeholder}
       ></StyledInput>
-      <StyledCloseIcon onClick={onReset}></StyledCloseIcon>
+      {onReset ? <StyledCloseIcon onClick={onReset}></StyledCloseIcon> : null}
     </StyledLabel>
   );
 }

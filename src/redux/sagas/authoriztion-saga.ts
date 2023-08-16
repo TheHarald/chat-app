@@ -10,15 +10,11 @@ import { callTs, put } from "./saga-functions";
 import { typedFetch } from "@/utils/request-utils";
 import { setCookie } from "@/utils/cookie-utils";
 import { SHOW_NOTIFICATION } from "@/modules/notifications/notification-constants";
+import { TRootResponseData } from "@/types/root-types";
 
 type LoginRequestData = {
   name: string;
   password: string;
-};
-
-type LoginResponseData<T> = {
-  message: string;
-  data?: T;
 };
 
 type RegisterRequestData = {
@@ -26,20 +22,15 @@ type RegisterRequestData = {
   password: string;
 };
 
-type RegisterResponseData<T = void> = {
-  message: string;
-  data?: T;
-};
-
 async function logIn(data: LoginRequestData) {
-  return typedFetch<LoginRequestData, LoginResponseData<string>>(
+  return typedFetch<LoginRequestData, TRootResponseData>(
     "/api/login",
     "POST",
     data
   );
 }
 async function registerAccount(data: RegisterRequestData) {
-  return typedFetch<RegisterRequestData, RegisterResponseData>(
+  return typedFetch<RegisterRequestData, TRootResponseData>(
     "/api/register",
     "POST",
     data
@@ -53,16 +44,16 @@ function* LogInWorker(action: LoginAccountAction): SagaIterator {
     isLoading: true,
   });
   const response = yield* callTs(logIn, { name, password });
-  if (response.data) {
-    setCookie("token", response.data, 1);
+  if (response.data && response.success) {
+    setCookie("token", response.data);
     yield put({
       type: SHOW_NOTIFICATION,
-      title: "Авторизация прошла успешно",
+      title: response.message || "Авторизация прошла успешно",
     });
   } else {
     yield put({
       type: SHOW_NOTIFICATION,
-      title: "Ошибка при авторизации",
+      title: response.message || "Ошибка при авторизации",
     });
   }
   yield put({
@@ -80,12 +71,16 @@ function* RegisterWorker(action: RegisterAccountAction): SagaIterator {
   const response = yield* callTs(registerAccount, { name, password });
   yield put({
     type: SHOW_NOTIFICATION,
-    title: "Регистрация прошла успешно",
+    title: response.message || "Регистрация прошла успешно",
   });
   yield put({
     type: AUTORIZATION_SET_IS_LOADING,
     isLoading: false,
   });
+}
+
+function checkAuthWorker() {
+  console.log("check");
 }
 
 export function* authorizationWorker(): SagaIterator {

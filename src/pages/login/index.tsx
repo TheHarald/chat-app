@@ -52,13 +52,8 @@ export default function Login() {
     });
   };
 
-  const clearHandler = () => {
-    console.log(name);
-    setName("");
-  };
-
   const checkAuth = () => {
-    router.push("/api/test");
+    router.push("/api/check-auth");
   };
 
   return (
@@ -68,7 +63,6 @@ export default function Login() {
         value={name}
         placeholder="name"
         onChange={(e) => setName(e.target.value)}
-        onReset={clearHandler}
       />
       <br />
       <Input
@@ -76,7 +70,6 @@ export default function Login() {
         type="password"
         placeholder="password"
         onChange={(e) => setPassword(e.target.value)}
-        onReset={() => setPassword("")}
       />
       <Loader isLoading={isLoading} />
       <br />

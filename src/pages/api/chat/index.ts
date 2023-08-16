@@ -1,5 +1,8 @@
+import { Chats } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
+import { protectedRoute } from "../routes";
+import { TRootResponseData } from "@/types/root-types";
 
 export type ChatApiRequestBody = {
   name: string;
@@ -9,15 +12,17 @@ interface ChatApiRequest extends NextApiRequest {
   body: ChatApiRequestBody;
 }
 
-export default async function handler(
+type ResponseDataType = Array<Chats> | Chats;
+
+export default protectedRoute(async function handler(
   req: ChatApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<TRootResponseData<ResponseDataType>>
 ) {
   const { method, body } = req;
 
   if (method === "GET") {
-    const users = await prisma.chats.findMany();
-    res.send(users);
+    const chats = await prisma.chats.findMany();
+    res.send({ data: chats, success: true });
   }
   if (method === "POST") {
     const chat = await prisma.chats.create({
@@ -25,8 +30,8 @@ export default async function handler(
         name: body.name,
       },
     });
-    res.send(chat);
+    res.send({ data: chat, success: true });
   }
   if (method === "DELETE") {
   }
-}
+});

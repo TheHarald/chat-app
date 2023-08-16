@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { TRootResponseData } from "@/types/root-types";
 import { hashPassword } from "@/utils/auth-utils/auth-utils";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -13,10 +14,10 @@ interface TRegisterApiRequest extends NextApiRequest {
 
 export default async function handler(
   req: TRegisterApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<TRootResponseData>
 ) {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
+    return res.send({ message: "Метод не разрешён", success: false });
   }
 
   const { name, password } = req.body;
@@ -30,7 +31,10 @@ export default async function handler(
       },
     });
     if (existeduser) {
-      res.send({ message: "A user with the same name already exists " });
+      res.send({
+        message: "Пользователь с таким именем уже существует",
+        success: false,
+      });
     }
     const user = await prisma.users.create({
       data: {
@@ -39,8 +43,14 @@ export default async function handler(
       },
     });
 
-    return res.status(201).json({ message: "User registered successfully" });
+    return res.send({
+      message: "Пользоваткель успешно зарегистрирован",
+      success: true,
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.send({
+      message: "Непредвиденная ошибка сервера",
+      success: false,
+    });
   }
 }
