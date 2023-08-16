@@ -10,6 +10,31 @@ import {
 } from "@/types/action-constants";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import styled from "styled-components";
+
+const StyledInputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const StyledAuthWrapper = styled.div`
+  background: white;
+  border: 1px solid #d7dbec;
+  padding: 16px;
+  border-radius: 8px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const StyledLoginPage = styled.div`
+  display: flex;
+  padding-top: 128px;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default function Login() {
   const [name, setName] = useState("");
@@ -57,28 +82,36 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h1>Login Page</h1>
-      <Input
-        value={name}
-        placeholder="name"
-        onChange={(e) => setName(e.target.value)}
-      />
-      <br />
-      <Input
-        value={password}
-        type="password"
-        placeholder="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Loader isLoading={isLoading} />
-      <br />
-      <Button onClick={loginHandler} text="Войти" />
-      <br />
-      <Button onClick={registerHandler} text="Зергистрироваться" />
-      <br />
-      <Button onClick={checkAuth} text="Проверить авторизацию" />
+    <StyledLoginPage>
+      <StyledAuthWrapper>
+        <h1>Авторизация</h1>
+        <StyledInputGroup>
+          <Input
+            value={name}
+            placeholder="name"
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            value={password}
+            type="password"
+            placeholder="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </StyledInputGroup>
+        {/* <Loader isLoading={isLoading} /> */}
+        <Button isLoading={isLoading} onClick={loginHandler} text="Войти" />
+        <Button
+          isLoading={isLoading}
+          onClick={registerHandler}
+          text="Зергистрироваться"
+        />
+        <Button
+          isLoading={isLoading}
+          onClick={checkAuth}
+          text="Проверить авторизацию"
+        />
+      </StyledAuthWrapper>
       <Notification />
-    </div>
+    </StyledLoginPage>
   );
 }

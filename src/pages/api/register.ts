@@ -44,7 +44,7 @@ export default async function handler(
     });
 
     return res.send({
-      message: "Пользоваткель успешно зарегистрирован",
+      message: "Пользователь успешно зарегистрирован",
       success: true,
     });
   } catch (error) {

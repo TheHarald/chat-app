@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 type TWrapperProps = {
   padding?: 8 | 16 | 24;
+  width?: number;
+  hight?: number;
   children: React.ReactNode;
 };
 
@@ -15,9 +17,7 @@ const StyledWrapper = styled.div<TWrapperProps>`
 `;
 
 function Wrapper(props: TWrapperProps) {
-  return (
-    <StyledWrapper padding={props.padding}>{props.children}</StyledWrapper>
-  );
+  return <StyledWrapper {...props}>{props.children}</StyledWrapper>;
 }
 
 export default Wrapper;

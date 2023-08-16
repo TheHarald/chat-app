@@ -37,3 +37,4 @@ next-env.d.ts
 /prisma/db/init.sql
 /.env
 /data
+/prisma/dev.db

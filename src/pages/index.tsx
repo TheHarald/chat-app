@@ -1,3 +1,4 @@
+import Button from "@/components/button/button";
 import Notification from "@/components/notification/notification";
 import Wrapper from "@/components/wrapper/wrapper";
 import { useRouter } from "next/router";
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <div>
       <Wrapper>
+        <Button isLoading text="some" onClick={() => {}} />
         <span>asd</span>
       </Wrapper>
     </div>

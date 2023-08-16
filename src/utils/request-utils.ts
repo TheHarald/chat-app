@@ -11,10 +11,6 @@ export async function typedFetch<RequestType, ResponseType>(
     body: JSON.stringify(requestBody),
   });
 
-  //   if (!response.ok) {
-  //     throw new Error(`Error: ${response.status} - ${response.statusText}`);
-  //   }
-
   const responseData: ResponseType = await response.json();
   return responseData;
 }

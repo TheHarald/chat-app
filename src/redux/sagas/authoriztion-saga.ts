@@ -8,7 +8,7 @@ import {
 import { LoginAccountAction, RegisterAccountAction } from "@/types/redux-types";
 import { callTs, put } from "./saga-functions";
 import { typedFetch } from "@/utils/request-utils";
-import { setCookie } from "@/utils/cookie-utils";
+import { getCookie, setCookie } from "@/utils/cookie-utils";
 import { SHOW_NOTIFICATION } from "@/modules/notifications/notification-constants";
 import { TRootResponseData } from "@/types/root-types";
 
@@ -79,8 +79,15 @@ function* RegisterWorker(action: RegisterAccountAction): SagaIterator {
   });
 }
 
-function checkAuthWorker() {
-  console.log("check");
+async function checkAuth() {
+  return typedFetch<{}, TRootResponseData>("/api/check-auth", "GET");
+}
+
+function* checkAuthWorker(): SagaIterator {
+  const response = yield* callTs(checkAuth);
+  if (response.success) {
+    console.log(response.message);
+  }
 }
 
 export function* authorizationWorker(): SagaIterator {

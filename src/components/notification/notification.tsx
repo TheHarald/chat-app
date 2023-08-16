@@ -20,7 +20,7 @@ const StyledNotification = styled.div`
   top: 10px;
   right: 10px;
   background: white;
-  border-radius: 16px;
+  border-radius: 8px;
   box-shadow: 0px 32px 32px 0px rgba(28, 41, 61, 0.06),
     0px 0px 32px 0px rgba(28, 41, 61, 0.05);
   display: flex;
