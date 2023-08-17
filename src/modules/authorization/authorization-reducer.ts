@@ -1,0 +1,59 @@
+import {
+  AUTHORIZATION_SET_IS_AUTHORIZED,
+  AUTORIZATION_NAME_CHANGE,
+  AUTORIZATION_PASSWORD_CHANGE,
+  AUTORIZATION_SET_IS_LOADING,
+} from "./authorization-constants";
+import {
+  TAuthorizationModuleActions,
+  TAuthorizationModuleState,
+} from "./authorization-types";
+
+const initialState: TAuthorizationModuleState = {
+  forms: {
+    password: "",
+    name: "",
+  },
+  isAuthorized: false,
+  isLoading: false,
+};
+
+export const authorizationReducer = (
+  state = initialState,
+  action: TAuthorizationModuleActions
+) => {
+  switch (action.type) {
+    case AUTORIZATION_PASSWORD_CHANGE: {
+      return {
+        ...state,
+        forms: {
+          ...state.forms,
+          password: action.password,
+        },
+      };
+    }
+    case AUTORIZATION_NAME_CHANGE: {
+      return {
+        ...state,
+        forms: {
+          ...state.forms,
+          name: action.name,
+        },
+      };
+    }
+    case AUTORIZATION_SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
+    }
+    case AUTHORIZATION_SET_IS_AUTHORIZED: {
+      return {
+        ...state,
+        isAuthorized: action.isAuthorized,
+      };
+    }
+    default:
+      return state;
+  }
+};

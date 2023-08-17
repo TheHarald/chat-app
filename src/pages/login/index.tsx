@@ -1,15 +1,21 @@
 import Button from "@/components/button/button";
 import Input from "@/components/input/Input";
-import Loader from "@/components/loader/loader";
 import Notification from "@/components/notification/notification";
 import { useDispatch, useSelector } from "@/hooks/hooks";
-import { SHOW_NOTIFICATION } from "@/modules/notifications/notification-constants";
 import {
+  AUTORIZATION_NAME_CHANGE,
+  AUTORIZATION_PASSWORD_CHANGE,
   LOGIN_ACCOUNT_ACTION,
   REGISTER_ACCOUNT_ACTION,
-} from "@/types/action-constants";
+} from "@/modules/authorization/authorization-constants";
+import {
+  authorizationFormsSelector,
+  authorizationisAuthorizedSelector,
+  authorizationisLoadingSelector,
+} from "@/modules/authorization/authorization-selectors";
+import { SHOW_NOTIFICATION } from "@/modules/notifications/notification-constants";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const StyledInputGroup = styled.div`
@@ -37,43 +43,55 @@ const StyledLoginPage = styled.div`
 `;
 
 export default function Login() {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const isLoading = useSelector((s) => s.authorization.isLoading);
+  const { name, password } = useSelector(authorizationFormsSelector);
+  const isLoading = useSelector(authorizationisLoadingSelector);
+  const isAuthorized = useSelector(authorizationisAuthorizedSelector);
 
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const validate = () => {
-    if (name.length === 0 || password.length === 0) {
-      dispatch({
-        type: SHOW_NOTIFICATION,
-        title: "Поля не должны быть пустыми",
-      });
-      return true;
+  useEffect(() => {
+    if (isAuthorized) {
+      router.push("/api/check-auth");
     }
-    return false;
+  }, [isAuthorized]);
+
+  const changeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: AUTORIZATION_NAME_CHANGE,
+      name: e.target.value,
+    });
+  };
+
+  const changePasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: AUTORIZATION_PASSWORD_CHANGE,
+      password: e.target.value,
+    });
+  };
+
+  const resetPasswordHandler = () => {
+    dispatch({
+      type: AUTORIZATION_PASSWORD_CHANGE,
+      password: "",
+    });
+  };
+  const resetNameHandler = () => {
+    dispatch({
+      type: AUTORIZATION_NAME_CHANGE,
+      name: "",
+    });
   };
 
   const loginHandler = () => {
-    if (validate()) {
-      return;
-    }
     dispatch({
       type: LOGIN_ACCOUNT_ACTION,
-      password,
-      name,
     });
   };
 
   const registerHandler = () => {
-    if (validate()) {
-      return;
-    }
     dispatch({
       type: REGISTER_ACCOUNT_ACTION,
-      password,
-      name,
     });
   };
 
@@ -87,18 +105,21 @@ export default function Login() {
         <h1>Авторизация</h1>
         <StyledInputGroup>
           <Input
+            label="Логин"
             value={name}
             placeholder="name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={changeNameHandler}
+            // onReset={resetNameHandler}
           />
           <Input
+            label="Пароль"
             value={password}
             type="password"
             placeholder="password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={changePasswordHandler}
+            // onReset={resetPasswordHandler}
           />
         </StyledInputGroup>
-        {/* <Loader isLoading={isLoading} /> */}
         <Button isLoading={isLoading} onClick={loginHandler} text="Войти" />
         <Button
           isLoading={isLoading}

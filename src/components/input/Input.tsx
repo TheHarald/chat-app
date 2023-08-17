@@ -58,6 +58,7 @@ function Input(props: InputProps) {
         onChange={onChange}
         type={type}
         placeholder={placeholder}
+        autoComplete="off"
       ></StyledInput>
       {onReset ? <StyledCloseIcon onClick={onReset}></StyledCloseIcon> : null}
     </StyledLabel>

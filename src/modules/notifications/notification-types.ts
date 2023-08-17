@@ -17,6 +17,6 @@ export type THideNotificationAction = {
   type: typeof HIDE_NOTIFICATION;
 };
 
-export type TNotificationActions =
+export type TNotificationModuleActions =
   | TShowNotificationAction
   | THideNotificationAction;

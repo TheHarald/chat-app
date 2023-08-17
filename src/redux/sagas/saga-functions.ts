@@ -4,7 +4,9 @@ import {
   PutEffect,
   put as originalPut,
   call as originalCall,
+  select as originalSelect,
 } from "redux-saga/effects";
+import { RootState } from "..";
 
 export type SagaGenerator<RT> = Generator<Effect<any>, RT, any>;
 
@@ -23,4 +25,12 @@ export function* callTs<Args extends any[], R>(
   ...args: Args
 ): SagaGenerator<UnwrapReturnType<R>> {
   return yield originalCall(fn, ...args);
+}
+
+export function* selectTs<Args extends unknown[], R>(
+  selector: (state: RootState, ...args: Args) => R,
+  ...args: Args
+): SagaGenerator<R> {
+  // @ts-ignore
+  return yield originalSelect(selector, ...args);
 }
