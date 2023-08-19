@@ -1,6 +1,5 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import Loader from "../loader/loader";
 
 type TButtonProps = {
   text: string;

@@ -8,14 +8,18 @@ import { fork } from "redux-saga/effects";
 import { authorizationWorker } from "../modules/authorization/authoriztion-saga";
 import { notificationReducer } from "@/modules/notifications/notification-reducer";
 import { authorizationReducer } from "@/modules/authorization/authorization-reducer";
+import { chatsReducer } from "@/modules/chat/chat-reducer";
+import { chatsWatcher } from "@/modules/chat/chat-saga";
 
 const rootReducer = combineReducers({
   notifications: notificationReducer,
   authorization: authorizationReducer,
+  chats: chatsReducer,
 });
 
 function* rootSaga() {
   yield fork(authorizationWorker);
+  yield fork(chatsWatcher);
 }
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

@@ -50,11 +50,11 @@ export default function Login() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  useEffect(() => {
-    if (isAuthorized) {
-      router.push("/api/check-auth");
-    }
-  }, [isAuthorized]);
+  // useEffect(() => {
+  //   if (isAuthorized) {
+  //     router.push("/api/check-auth");
+  //   }
+  // }, [isAuthorized]);
 
   const changeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
@@ -132,7 +132,6 @@ export default function Login() {
           text="Проверить авторизацию"
         />
       </StyledAuthWrapper>
-      <Notification />
     </StyledLoginPage>
   );
 }

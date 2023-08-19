@@ -55,4 +55,5 @@ export type TAuthorizationModuleActions =
   | TAuthorizationPawwordInputChange
   | TAuthorizationSetIsAuthorizedAction
   | TAuthorizationNameInputChange
+  | TAuthorizationRegisterAccountAction
   | TAuthorizationLoginAccountAction;

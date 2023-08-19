@@ -1,6 +1,6 @@
 import { HIDE_NOTIFICATION, SHOW_NOTIFICATION } from "./notification-constants";
 import {
-  TNotificationModukeActions,
+  TNotificationModuleActions,
   TNotificationModuleState,
 } from "./notification-types";
 
@@ -14,7 +14,7 @@ const initialState: TNotificationModuleState = {
 
 export const notificationReducer = (
   state = initialState,
-  action: TNotificationModukeActions
+  action: TNotificationModuleActions
 ) => {
   switch (action.type) {
     case SHOW_NOTIFICATION: {

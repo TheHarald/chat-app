@@ -3,7 +3,6 @@ import styled, { keyframes } from "styled-components";
 
 type TLoaderProps = {
   size?: number;
-  isLoading: boolean;
 };
 
 const spin = keyframes`
@@ -25,9 +24,6 @@ const StyledLoader = styled.div<Omit<TLoaderProps, "isLoading">>`
 `;
 
 function Loader(props: TLoaderProps) {
-  if (!props.isLoading) {
-    return null;
-  }
   return <StyledLoader size={props.size}></StyledLoader>;
 }
 

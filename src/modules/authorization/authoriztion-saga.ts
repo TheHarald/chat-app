@@ -1,5 +1,5 @@
 import { SagaIterator } from "redux-saga";
-import { takeEvery } from "redux-saga/effects";
+import { call, takeEvery } from "redux-saga/effects";
 import { callTs, put, selectTs } from "../../redux/sagas/saga-functions";
 import { typedFetch } from "@/utils/request-utils";
 import { setCookie } from "@/utils/cookie-utils";
@@ -13,6 +13,7 @@ import {
   REGISTER_ACCOUNT_ACTION,
 } from "./authorization-constants";
 import { authorizationFormsSelector } from "./authorization-selectors";
+import Router from "next/router";
 
 type LoginRequestData = {
   name: string;
@@ -72,6 +73,7 @@ function* LogInWorker(): SagaIterator {
       type: SHOW_NOTIFICATION,
       title: response.message || "Авторизация прошла успешно",
     });
+    yield call(Router.push, "/");
   } else {
     yield put({
       type: SHOW_NOTIFICATION,
@@ -131,6 +133,7 @@ function* checkAuthWorker(): SagaIterator {
       type: AUTHORIZATION_SET_IS_AUTHORIZED,
       isAuthorized: false,
     });
+    yield call(Router.push, "/login");
   }
   yield put({
     type: AUTORIZATION_SET_IS_LOADING,
