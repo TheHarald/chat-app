@@ -1,15 +1,68 @@
 import { SagaIterator } from "redux-saga";
 import { call, takeEvery } from "redux-saga/effects";
-import { CHATS_SET_IS_LOADING, GET_CHATS, SET_CHATS } from "./chat-constants";
+import {
+  ADD_CHAT,
+  CHATS_SET_IS_LOADING,
+  CREATE_CHAT,
+  GET_CHATS,
+  SET_CHATS,
+} from "./chat-constants";
 import { typedFetch } from "@/utils/request-utils";
 import { TRootResponseData } from "@/types/root-types";
-import { callTs, put } from "@/redux/sagas/saga-functions";
+import { callTs, put, selectTs } from "@/redux/sagas/saga-functions";
 import { Chats } from "@prisma/client";
 import Router from "next/router";
 import { SHOW_NOTIFICATION } from "../notifications/notification-constants";
+import { chatsFiledsSelector } from "./chat-selectors";
+
+export type TCreateChatRequestData = Omit<Chats, "id">;
+
+async function createChat(data: TCreateChatRequestData) {
+  return typedFetch<TCreateChatRequestData, TRootResponseData<Chats>>(
+    "/api/chat",
+    "POST",
+    data
+  );
+}
 
 async function getChats() {
   return typedFetch<{}, TRootResponseData<Array<Chats>>>("/api/chat", "GET");
+}
+
+export function isValidField(field: string) {
+  const wordhMore4 = /^\w{4,}$/;
+  return wordhMore4.test(field);
+}
+
+function* createChatWorker(): SagaIterator {
+  const { chatName } = yield* selectTs(chatsFiledsSelector);
+
+  if (!isValidField(chatName)) {
+    yield put({
+      type: SHOW_NOTIFICATION,
+      title: "Невалидное название чата",
+    });
+    return;
+  }
+
+  const response = yield* callTs(createChat, { name: chatName });
+
+  if (response.code === 401) {
+    yield call(Router.push, "/login");
+    return;
+  }
+
+  if (response.data && response.success) {
+    yield put({
+      type: ADD_CHAT,
+      chat: response.data,
+    });
+  } else {
+    yield put({
+      type: SHOW_NOTIFICATION,
+      title: response.message || "Не удалось создать чат",
+    });
+  }
 }
 
 function* getChatsWorker(): SagaIterator {
@@ -45,4 +98,5 @@ function* getChatsWorker(): SagaIterator {
 
 export function* chatsWatcher(): SagaIterator {
   yield takeEvery(GET_CHATS, getChatsWorker);
+  yield takeEvery(CREATE_CHAT, createChatWorker);
 }

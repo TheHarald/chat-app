@@ -6,3 +6,6 @@ export const chatsSelector = (s: RootState) => {
 export const chatsIsLoadingSelector = (s: RootState) => {
   return s.chats.isLoading;
 };
+export const chatsFiledsSelector = (s: RootState) => {
+  return s.chats.forms;
+};

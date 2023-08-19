@@ -44,7 +44,7 @@ async function checkAuth() {
   return typedFetch<{}, TRootResponseData>("/api/check-auth", "GET");
 }
 
-function isValidField(field: string) {
+export function isValidField(field: string) {
   const englishMore4 = /^[A-Za-z0-9]{4,}$/;
   return englishMore4.test(field);
 }

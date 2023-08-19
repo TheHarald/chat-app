@@ -4,6 +4,7 @@ import styled, { keyframes } from "styled-components";
 type TButtonProps = {
   text: string;
   isLoading?: boolean;
+  disabled?: boolean;
   onClick: () => void;
 };
 
@@ -26,6 +27,11 @@ const Styledbutton = styled.button`
   border: none;
   appearance: none;
   transition: 0.3s;
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 
   &:hover {
     cursor: pointer;
@@ -54,9 +60,9 @@ const StyledLoader = styled.div`
 `;
 
 function Button(props: TButtonProps) {
-  const { onClick, text } = props;
+  const { onClick, isLoading, disabled, text } = props;
   return (
-    <Styledbutton disabled={props.isLoading} onClick={onClick}>
+    <Styledbutton disabled={isLoading || disabled} onClick={onClick}>
       {props.isLoading ? <StyledLoader /> : text}
     </Styledbutton>
   );
