@@ -5,11 +5,7 @@ import {
 } from "./notification-types";
 
 const initialState: TNotificationModuleState = {
-  visability: false,
-  data: {
-    titile: "",
-    text: "",
-  },
+  notifications: [],
 };
 
 export const notificationReducer = (
@@ -20,21 +16,21 @@ export const notificationReducer = (
     case SHOW_NOTIFICATION: {
       return {
         ...state,
-        visability: true,
-        data: {
-          titile: action.title,
-          text: action.text,
-        },
+        notifications: [...state.notifications, action.notification],
       };
     }
     case HIDE_NOTIFICATION: {
       return {
         ...state,
-        visability: false,
-        data: {
-          titile: "",
-          text: "",
-        },
+        notifications: state.notifications.map((notification) => {
+          if (notification.id === action.id) {
+            return {
+              ...notification,
+              isVisible: false,
+            };
+          }
+          return notification;
+        }),
       };
     }
 

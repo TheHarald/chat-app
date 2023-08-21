@@ -4,21 +4,14 @@ import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Close } from "styled-icons/evil";
 
-type TNotificationProps = {};
-
-const show = keyframes`
-    0% {
-        transform: translateY(-100px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-`;
+type TNotificationProps = {
+  id: string;
+  title: string;
+  text?: string;
+  isVisible: boolean;
+};
 
 const StyledNotification = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
   background: white;
   border-radius: 8px;
   box-shadow: 0px 32px 32px 0px rgba(28, 41, 61, 0.06),
@@ -31,7 +24,6 @@ const StyledNotification = styled.div`
   min-width: 200px;
   max-width: 300px;
   transition: 0.5s;
-  animation: ${show} 0.3s ease-in-out;
 `;
 
 const StyledTitle = styled.span`
@@ -71,14 +63,14 @@ const StyledClose = styled(Close)`
 `;
 
 function Notification(props: TNotificationProps) {
-  const isVisible = useSelector((state) => state.notifications.visability);
-  const title = useSelector((state) => state.notifications.data.titile);
-  const text = useSelector((state) => state.notifications.data.text);
   const dispatch = useDispatch();
+
+  const { id, isVisible, text, title } = props;
 
   const handleClick = () => {
     dispatch({
       type: HIDE_NOTIFICATION,
+      id,
     });
   };
 
@@ -86,6 +78,7 @@ function Notification(props: TNotificationProps) {
     setTimeout(() => {
       dispatch({
         type: HIDE_NOTIFICATION,
+        id,
       });
     }, 3000);
   }, []);

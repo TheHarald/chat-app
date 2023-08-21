@@ -14,6 +14,7 @@ import {
 } from "./authorization-constants";
 import { authorizationFormsSelector } from "./authorization-selectors";
 import Router from "next/router";
+import { uuidv4 } from "@/utils/uuid";
 
 type LoginRequestData = {
   name: string;
@@ -55,7 +56,11 @@ function* LogInWorker(): SagaIterator {
   if (!isValidField(name) && !isValidField(password)) {
     yield put({
       type: SHOW_NOTIFICATION,
-      title: "Поля заполнены неверно, а как думай сам.",
+      notification: {
+        title: "Поля заполнены неверно, а как думай сам.",
+        isVisible: true,
+        id: uuidv4(),
+      },
     });
     return;
   }
@@ -71,13 +76,21 @@ function* LogInWorker(): SagaIterator {
     setCookie("token", response.data);
     yield put({
       type: SHOW_NOTIFICATION,
-      title: response.message || "Авторизация прошла успешно",
+      notification: {
+        title: response.message || "Авторизация прошла успешно",
+        isVisible: true,
+        id: uuidv4(),
+      },
     });
     yield call(Router.push, "/");
   } else {
     yield put({
       type: SHOW_NOTIFICATION,
-      title: response.message || "Ошибка при авторизации",
+      notification: {
+        title: response.message || "Ошибка при авторизации",
+        isVisible: true,
+        id: uuidv4(),
+      },
     });
   }
   yield put({
@@ -96,7 +109,11 @@ function* RegisterWorker(): SagaIterator {
   if (!isValidField(name) && !isValidField(password)) {
     yield put({
       type: SHOW_NOTIFICATION,
-      title: "Поля заполнены неверно, а как думай сам.",
+      notification: {
+        title: "Поля заполнены неверно, а как думай сам.",
+        isVisible: true,
+        id: uuidv4(),
+      },
     });
     return;
   }
@@ -109,7 +126,11 @@ function* RegisterWorker(): SagaIterator {
   const response = yield* callTs(registerAccount, { name, password });
   yield put({
     type: SHOW_NOTIFICATION,
-    title: response.message || "Регистрация прошла успешно",
+    notification: {
+      title: response.message || "Регистрация прошла успешно",
+      isVisible: true,
+      id: uuidv4(),
+    },
   });
   yield put({
     type: AUTORIZATION_SET_IS_LOADING,

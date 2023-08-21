@@ -14,6 +14,7 @@ import { Chats } from "@prisma/client";
 import Router from "next/router";
 import { SHOW_NOTIFICATION } from "../notifications/notification-constants";
 import { chatsFiledsSelector } from "./chat-selectors";
+import { uuidv4 } from "@/utils/uuid";
 
 export type TCreateChatRequestData = Omit<Chats, "id">;
 
@@ -40,7 +41,11 @@ function* createChatWorker(): SagaIterator {
   if (!isValidField(chatName)) {
     yield put({
       type: SHOW_NOTIFICATION,
-      title: "Невалидное название чата",
+      notification: {
+        title: "Невалидное название чата",
+        isVisible: true,
+        id: uuidv4(),
+      },
     });
     return;
   }
@@ -60,7 +65,11 @@ function* createChatWorker(): SagaIterator {
   } else {
     yield put({
       type: SHOW_NOTIFICATION,
-      title: response.message || "Не удалось создать чат",
+      notification: {
+        title: response.message || "Не удалось создать чат",
+        isVisible: true,
+        id: uuidv4(),
+      },
     });
   }
 }
@@ -86,7 +95,11 @@ function* getChatsWorker(): SagaIterator {
   } else {
     yield put({
       type: SHOW_NOTIFICATION,
-      title: response.message || "Не удалось получить чаты",
+      notification: {
+        title: response.message || "Не удалось получить чаты",
+        isVisible: true,
+        id: uuidv4(),
+      },
     });
   }
 
