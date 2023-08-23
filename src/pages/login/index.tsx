@@ -1,6 +1,5 @@
-import Button from "@/components/button/button";
-import Input from "@/components/input/Input";
-import Notification from "@/components/notification/notification";
+import { Button, Card, CardBody } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { useDispatch, useSelector } from "@/hooks/hooks";
 import {
   AUTORIZATION_NAME_CHANGE,
@@ -13,9 +12,7 @@ import {
   authorizationisAuthorizedSelector,
   authorizationisLoadingSelector,
 } from "@/modules/authorization/authorization-selectors";
-import { SHOW_NOTIFICATION } from "@/modules/notifications/notification-constants";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const StyledInputGroup = styled.div`
@@ -101,37 +98,39 @@ export default function Login() {
 
   return (
     <StyledLoginPage>
-      <StyledAuthWrapper>
-        <h1>Авторизация</h1>
-        <StyledInputGroup>
-          <Input
-            label="Логин"
-            value={name}
-            placeholder="name"
-            onChange={changeNameHandler}
-            // onReset={resetNameHandler}
-          />
-          <Input
-            label="Пароль"
-            value={password}
-            type="password"
-            placeholder="password"
-            onChange={changePasswordHandler}
-            // onReset={resetPasswordHandler}
-          />
-        </StyledInputGroup>
-        <Button isLoading={isLoading} onClick={loginHandler} text="Войти" />
-        <Button
-          isLoading={isLoading}
-          onClick={registerHandler}
-          text="Зергистрироваться"
-        />
-        <Button
-          isLoading={isLoading}
-          onClick={checkAuth}
-          text="Проверить авторизацию"
-        />
-      </StyledAuthWrapper>
+      <Card>
+        <CardBody className="p-4 flex flex-col gap-2 min-w-[320px]">
+          <h1>Авторизация</h1>
+          <StyledInputGroup>
+            <Input
+              label="Логин"
+              value={name}
+              placeholder="Введите логин"
+              onChange={changeNameHandler}
+            />
+            <Input
+              label="Пароль"
+              value={password}
+              type="password"
+              placeholder="Введите пароль"
+              onChange={changePasswordHandler}
+            />
+          </StyledInputGroup>
+          <Button isLoading={isLoading} onClick={loginHandler} color="primary">
+            Войти
+          </Button>
+          <Button
+            isLoading={isLoading}
+            onClick={registerHandler}
+            color="primary"
+          >
+            Зергистрироваться
+          </Button>
+          <Button isLoading={isLoading} onClick={checkAuth} color="primary">
+            Проверить авторизацию
+          </Button>
+        </CardBody>
+      </Card>
     </StyledLoginPage>
   );
 }

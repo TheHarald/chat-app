@@ -38,3 +38,4 @@ next-env.d.ts
 /.env
 /data
 /prisma/dev.db
+/.vscode

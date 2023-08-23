@@ -3,7 +3,9 @@ import { store } from "@/redux";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
-import "typeface-inter";
+// import "typeface-inter";
+import "../styles/globals.css";
+import { NextUIProvider } from "@nextui-org/react";
 
 const GlobalStyle = createGlobalStyle`
   *{
@@ -18,11 +20,13 @@ const GlobalStyle = createGlobalStyle`
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Provider store={store}>
-        <GlobalStyle />
-        <Component {...pageProps} />
-        <NotificationModule />
-      </Provider>
+      <NextUIProvider>
+        <Provider store={store}>
+          {/* <GlobalStyle /> */}
+          <Component {...pageProps} />
+          <NotificationModule />
+        </Provider>
+      </NextUIProvider>
     </>
   );
 }

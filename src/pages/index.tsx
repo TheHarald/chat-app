@@ -20,6 +20,7 @@ import {
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import styled from "styled-components";
+import { Snippet, Switch } from "@nextui-org/react";
 
 const StyledChatsList = styled.div`
   display: flex;
@@ -79,6 +80,7 @@ export default function Home() {
           })
         )}
       </StyledChatsList>
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
     </div>
   );
 }
