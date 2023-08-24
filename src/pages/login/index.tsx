@@ -1,5 +1,4 @@
-import { Button, Card, CardBody } from "@nextui-org/react";
-import { Input } from "@nextui-org/react";
+import { Button, Card, CardBody, Input } from "@nextui-org/react";
 import { useDispatch, useSelector } from "@/hooks/hooks";
 import {
   AUTORIZATION_NAME_CHANGE,
@@ -13,31 +12,6 @@ import {
   authorizationisLoadingSelector,
 } from "@/modules/authorization/authorization-selectors";
 import { useRouter } from "next/router";
-import styled from "styled-components";
-
-const StyledInputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const StyledAuthWrapper = styled.div`
-  background: white;
-  border: 1px solid #d7dbec;
-  padding: 16px;
-  border-radius: 8px;
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const StyledLoginPage = styled.div`
-  display: flex;
-  padding-top: 128px;
-  justify-content: center;
-  align-items: center;
-`;
 
 export default function Login() {
   const { name, password } = useSelector(authorizationFormsSelector);
@@ -67,19 +41,6 @@ export default function Login() {
     });
   };
 
-  const resetPasswordHandler = () => {
-    dispatch({
-      type: AUTORIZATION_PASSWORD_CHANGE,
-      password: "",
-    });
-  };
-  const resetNameHandler = () => {
-    dispatch({
-      type: AUTORIZATION_NAME_CHANGE,
-      name: "",
-    });
-  };
-
   const loginHandler = () => {
     dispatch({
       type: LOGIN_ACCOUNT_ACTION,
@@ -97,11 +58,11 @@ export default function Login() {
   };
 
   return (
-    <StyledLoginPage>
-      <Card>
+    <div className="flex w-full h-screen justify-center items-center">
+      <Card className="h-min">
         <CardBody className="p-4 flex flex-col gap-2 min-w-[320px]">
-          <h1>Авторизация</h1>
-          <StyledInputGroup>
+          <h1 className="text-2xl">Авторизация</h1>
+          <div className="flex flex-col gap-2">
             <Input
               label="Логин"
               value={name}
@@ -115,7 +76,7 @@ export default function Login() {
               placeholder="Введите пароль"
               onChange={changePasswordHandler}
             />
-          </StyledInputGroup>
+          </div>
           <Button isLoading={isLoading} onClick={loginHandler} color="primary">
             Войти
           </Button>
@@ -131,6 +92,6 @@ export default function Login() {
           </Button>
         </CardBody>
       </Card>
-    </StyledLoginPage>
+    </div>
   );
 }

@@ -1,12 +1,6 @@
-import Button from "@/components/button/button";
-import ChatCard from "@/components/chat-card/chat-card";
-import Input from "@/components/input/Input";
 import Loader from "@/components/loader/loader";
-import Notification from "@/components/notification/notification";
-import Wrapper from "@/components/wrapper/wrapper";
 import { useDispatch, useSelector } from "@/hooks/hooks";
 import { AUTHORIZATION_CHECK_AUTH } from "@/modules/authorization/authorization-constants";
-import { authorizationisAuthorizedSelector } from "@/modules/authorization/authorization-selectors";
 import {
   CHANGE_CHAT_NAME,
   CREATE_CHAT,
@@ -19,14 +13,7 @@ import {
 } from "@/modules/chat/chat-selectors";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import styled from "styled-components";
-import { Snippet, Switch } from "@nextui-org/react";
-
-const StyledChatsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
+import { Button, Input } from "@nextui-org/react";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -60,27 +47,30 @@ export default function Home() {
     dispatch({
       type: CREATE_CHAT,
     });
+    dispatch({
+      type: CHANGE_CHAT_NAME,
+      chatName: "",
+    });
   };
 
   return (
     <div>
-      <Button text="Выйти" onClick={logOutHandler} />
+      <Button onClick={logOutHandler}>Выйти</Button>
       <Input
         value={chatName}
         onChange={chatNameChangeHadler}
         label="Название чата"
       />
-      <Button text="Создать чат" onClick={createChantHandler} />
-      <StyledChatsList>
+      <Button onClick={createChantHandler}>Создать чат</Button>
+      <div className="flex flex-col gap-2">
         {isLoading ? (
           <Loader size={32} />
         ) : (
           chats.map(({ name, id }) => {
-            return <ChatCard key={id} name={name} />;
+            return <div key={id}>{name}</div>;
           })
         )}
-      </StyledChatsList>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      </div>
     </div>
   );
 }
