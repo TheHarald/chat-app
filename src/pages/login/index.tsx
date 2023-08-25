@@ -1,4 +1,12 @@
-import { Button, Card, CardBody, Input } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Input,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@nextui-org/react";
 import { useDispatch, useSelector } from "@/hooks/hooks";
 import {
   AUTORIZATION_NAME_CHANGE,
@@ -12,6 +20,7 @@ import {
   authorizationisLoadingSelector,
 } from "@/modules/authorization/authorization-selectors";
 import { useRouter } from "next/router";
+import { Info } from "styled-icons/fluentui-system-regular";
 
 export default function Login() {
   const { name, password } = useSelector(authorizationFormsSelector);
@@ -63,13 +72,31 @@ export default function Login() {
         <CardBody className="p-4 flex flex-col gap-2 min-w-[320px]">
           <h1 className="text-2xl">Авторизация</h1>
           <div className="flex flex-col gap-2">
+            <div className="flex flex-row gap-2 items-end">
+              <Input
+                labelPlacement="outside"
+                label="Логин"
+                value={name}
+                placeholder="Введите логин"
+                onChange={changeNameHandler}
+              />
+              <Popover placement="right">
+                <PopoverTrigger>
+                  <Button variant="light" isIconOnly>
+                    <Info size={24} />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="px-1 py-2 max-w-[180px]">
+                    <div className="text-tiny">
+                      Логин будет использован в качестве никнейма
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
             <Input
-              label="Логин"
-              value={name}
-              placeholder="Введите логин"
-              onChange={changeNameHandler}
-            />
-            <Input
+              labelPlacement="outside"
               label="Пароль"
               value={password}
               type="password"

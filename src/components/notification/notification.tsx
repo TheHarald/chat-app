@@ -1,7 +1,10 @@
 import { useDispatch, useSelector } from "@/hooks/hooks";
 import { HIDE_NOTIFICATION } from "@/modules/notifications/notification-constants";
+import { Button, Card, CardBody } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { CloseOutline } from "styled-icons/evaicons-outline";
+import { CloseCircle } from "styled-icons/evaicons-solid";
 import { Close } from "styled-icons/evil";
 
 type TNotificationProps = {
@@ -86,13 +89,17 @@ function Notification(props: TNotificationProps) {
   return (
     <>
       {isVisible ? (
-        <StyledNotification>
-          <StyledInfoContainer>
-            <StyledTitle>{title}</StyledTitle>
-            {text ? <StyledText>{text}</StyledText> : null}
-          </StyledInfoContainer>
-          <StyledClose onClick={handleClick}></StyledClose>
-        </StyledNotification>
+        <Card>
+          <CardBody className="flex flex-row gap-2 min-w-[180px] max-w-[320px]">
+            <div className="flex flex-col gap-2">
+              <p className="text-small">{title}</p>
+              {text ? <p className="text-tiny">{text}</p> : null}
+            </div>
+            <Button variant="light" isIconOnly onClick={handleClick}>
+              <CloseOutline size={24} />
+            </Button>
+          </CardBody>
+        </Card>
       ) : null}
     </>
   );

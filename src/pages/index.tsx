@@ -1,4 +1,3 @@
-import Loader from "@/components/loader/loader";
 import { useDispatch, useSelector } from "@/hooks/hooks";
 import { AUTHORIZATION_CHECK_AUTH } from "@/modules/authorization/authorization-constants";
 import {
@@ -13,7 +12,7 @@ import {
 } from "@/modules/chat/chat-selectors";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, Spinner } from "@nextui-org/react";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -64,7 +63,7 @@ export default function Home() {
       <Button onClick={createChantHandler}>Создать чат</Button>
       <div className="flex flex-col gap-2">
         {isLoading ? (
-          <Loader size={32} />
+          <Spinner />
         ) : (
           chats.map(({ name, id }) => {
             return <div key={id}>{name}</div>;
