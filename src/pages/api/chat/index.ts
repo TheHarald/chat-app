@@ -1,7 +1,7 @@
 import { Chats } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
-import { protectedRoute } from "../routes";
+import { protectedRoute } from "../protected-route";
 import { TRootResponseData } from "@/types/root-types";
 
 export type ChatApiRequestBody = {

@@ -1,5 +1,6 @@
 import {
   AUTHORIZATION_SET_IS_AUTHORIZED,
+  AUTHORIZATION_SET_USER_INFO,
   AUTORIZATION_NAME_CHANGE,
   AUTORIZATION_PASSWORD_CHANGE,
   AUTORIZATION_SET_IS_LOADING,
@@ -13,6 +14,10 @@ const initialState: TAuthorizationModuleState = {
   forms: {
     password: "",
     name: "",
+  },
+  userInfo: {
+    name: "",
+    id: "",
   },
   isAuthorized: false,
   isLoading: false,
@@ -53,6 +58,17 @@ export const authorizationReducer = (
         isAuthorized: action.isAuthorized,
       };
     }
+    case AUTHORIZATION_SET_USER_INFO: {
+      return {
+        ...state,
+        userInfo: {
+          ...state.userInfo,
+          id: action.userInfo.id,
+          name: action.userInfo.name,
+        },
+      };
+    }
+
     default:
       return state;
   }

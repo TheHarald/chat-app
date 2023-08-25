@@ -1,6 +1,9 @@
+import { TUserInfo } from "@/types/root-types";
 import {
   AUTHORIZATION_CHECK_AUTH,
+  AUTHORIZATION_GET_USER_INFO,
   AUTHORIZATION_SET_IS_AUTHORIZED,
+  AUTHORIZATION_SET_USER_INFO,
   AUTORIZATION_NAME_CHANGE,
   AUTORIZATION_PASSWORD_CHANGE,
   AUTORIZATION_SET_IS_LOADING,
@@ -12,6 +15,10 @@ export type TAuthorizationModuleState = {
   forms: {
     name: string;
     password: string;
+  };
+  userInfo: {
+    name: string;
+    id: string;
   };
   isAuthorized: boolean;
   isLoading: boolean;
@@ -37,10 +44,17 @@ export type TAuthorizationLogoutAccountAction = {
 export type TAuthorizationCheckAuthAction = {
   type: typeof AUTHORIZATION_CHECK_AUTH;
 };
+export type TAuthorizationGetUserInfoAction = {
+  type: typeof AUTHORIZATION_GET_USER_INFO;
+};
 
 export type TAuthorizationPawwordInputChange = {
   type: typeof AUTORIZATION_PASSWORD_CHANGE;
   password: string;
+};
+export type TAuthorizationSetUserInfoAction = {
+  type: typeof AUTHORIZATION_SET_USER_INFO;
+  userInfo: TUserInfo;
 };
 export type TAuthorizationNameInputChange = {
   type: typeof AUTORIZATION_NAME_CHANGE;
@@ -56,4 +70,6 @@ export type TAuthorizationModuleActions =
   | TAuthorizationSetIsAuthorizedAction
   | TAuthorizationNameInputChange
   | TAuthorizationRegisterAccountAction
+  | TAuthorizationSetUserInfoAction
+  | TAuthorizationGetUserInfoAction
   | TAuthorizationLoginAccountAction;

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { protectedRoute } from "./routes";
+import { protectedRoute } from "./protected-route";
 import { TRootResponseData } from "@/types/root-types";
 
 export default protectedRoute(

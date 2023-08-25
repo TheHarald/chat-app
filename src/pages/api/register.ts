@@ -25,12 +25,12 @@ export default async function handler(
   const hashedPassword = await hashPassword(password);
 
   try {
-    const existeduser = await prisma.users.findFirst({
+    const existedUser = await prisma.users.findFirst({
       where: {
         name,
       },
     });
-    if (existeduser) {
+    if (existedUser) {
       res.send({
         message: "Пользователь с таким именем уже существует",
         success: false,

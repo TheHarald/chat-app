@@ -4,10 +4,12 @@ import { callTs, put, selectTs } from "../../redux/sagas/saga-functions";
 import { typedFetch } from "@/utils/request-utils";
 import { setCookie } from "@/utils/cookie-utils";
 import { SHOW_NOTIFICATION } from "@/modules/notifications/notification-constants";
-import { TRootResponseData } from "@/types/root-types";
+import { TRootResponseData, TUserInfo } from "@/types/root-types";
 import {
   AUTHORIZATION_CHECK_AUTH,
+  AUTHORIZATION_GET_USER_INFO,
   AUTHORIZATION_SET_IS_AUTHORIZED,
+  AUTHORIZATION_SET_USER_INFO,
   AUTORIZATION_SET_IS_LOADING,
   LOGIN_ACCOUNT_ACTION,
   REGISTER_ACCOUNT_ACTION,
@@ -43,6 +45,12 @@ async function registerAccount(data: RegisterRequestData) {
 
 async function checkAuth() {
   return typedFetch<{}, TRootResponseData>("/api/check-auth", "GET");
+}
+async function getUserInfo() {
+  return typedFetch<{}, TRootResponseData<TUserInfo>>(
+    "/api/users/user-info",
+    "GET"
+  );
 }
 
 export function isValidField(field: string) {
@@ -143,7 +151,9 @@ function* checkAuthWorker(): SagaIterator {
     type: AUTORIZATION_SET_IS_LOADING,
     isLoading: true,
   });
+
   const response = yield* callTs(checkAuth);
+
   if (response.success) {
     yield put({
       type: AUTHORIZATION_SET_IS_AUTHORIZED,
@@ -154,16 +164,56 @@ function* checkAuthWorker(): SagaIterator {
       type: AUTHORIZATION_SET_IS_AUTHORIZED,
       isAuthorized: false,
     });
+
     yield call(Router.push, "/login");
   }
+
   yield put({
     type: AUTORIZATION_SET_IS_LOADING,
     isLoading: false,
   });
 }
 
+function* getUserInfoWorker(): SagaIterator {
+  yield put({
+    type: AUTORIZATION_SET_IS_LOADING,
+    isLoading: true,
+  });
+
+  const response = yield* callTs(getUserInfo);
+
+  if (response.success && response.data) {
+    yield put({
+      type: AUTHORIZATION_SET_USER_INFO,
+      userInfo: response.data,
+    });
+
+    yield put({
+      type: AUTHORIZATION_SET_IS_AUTHORIZED,
+      isAuthorized: true,
+    });
+  } else {
+    yield put({
+      type: AUTHORIZATION_SET_IS_AUTHORIZED,
+      isAuthorized: false,
+    });
+
+    yield put({
+      type: SHOW_NOTIFICATION,
+      notification: {
+        title:
+          response.message ||
+          "При получении данных пользователя что-то пошло не так",
+        isVisible: true,
+        id: uuidv4(),
+      },
+    });
+  }
+}
+
 export function* authorizationWorker(): SagaIterator {
   yield takeEvery(LOGIN_ACCOUNT_ACTION, LogInWorker);
   yield takeEvery(REGISTER_ACCOUNT_ACTION, RegisterWorker);
   yield takeEvery(AUTHORIZATION_CHECK_AUTH, checkAuthWorker);
+  yield takeEvery(AUTHORIZATION_GET_USER_INFO, getUserInfoWorker);
 }
