@@ -30,7 +30,8 @@ model Messages {
 
 model Chats {
   id           String         @id @default(uuid())
-  name         String         
+  name         String
+  creatorId    String   
   users        Users[]
   UsersOnChats UsersOnChats[]
   Messages     Messages[]

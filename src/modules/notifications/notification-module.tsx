@@ -18,7 +18,13 @@ export const NotificationModule = () => {
   return (
     <StyledNotificationContainer>
       {notifications.map(({ isVisible, title, text, id }) => (
-        <Notification isVisible={isVisible} id={id} title={title} text={text} />
+        <Notification
+          key={id}
+          isVisible={isVisible}
+          id={id}
+          title={title}
+          text={text}
+        />
       ))}
     </StyledNotificationContainer>
   );

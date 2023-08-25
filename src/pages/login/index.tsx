@@ -21,20 +21,37 @@ import {
 } from "@/modules/authorization/authorization-selectors";
 import { useRouter } from "next/router";
 import { Info } from "styled-icons/fluentui-system-regular";
+import { useState } from "react";
+import { Eye, EyeSlash } from "styled-icons/bootstrap";
+
+function ShowHidePassword({
+  isVisible,
+  toggleVisibility,
+}: {
+  isVisible: boolean;
+  toggleVisibility: () => void;
+}) {
+  return (
+    <button
+      className="focus:outline-none"
+      type="button"
+      onClick={toggleVisibility}
+    >
+      {isVisible ? <EyeSlash size={24} /> : <Eye size={24} />}
+    </button>
+  );
+}
 
 export default function Login() {
   const { name, password } = useSelector(authorizationFormsSelector);
   const isLoading = useSelector(authorizationisLoadingSelector);
-  const isAuthorized = useSelector(authorizationisAuthorizedSelector);
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const dispatch = useDispatch();
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (isAuthorized) {
-  //     router.push("/api/check-auth");
-  //   }
-  // }, [isAuthorized]);
 
   const changeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
@@ -99,9 +116,15 @@ export default function Login() {
               labelPlacement="outside"
               label="Пароль"
               value={password}
-              type="password"
               placeholder="Введите пароль"
               onChange={changePasswordHandler}
+              type={isVisible ? "text" : "password"}
+              endContent={
+                <ShowHidePassword
+                  isVisible={isVisible}
+                  toggleVisibility={toggleVisibility}
+                />
+              }
             />
           </div>
           <Button isLoading={isLoading} onClick={loginHandler} color="primary">

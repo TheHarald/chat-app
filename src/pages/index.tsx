@@ -21,6 +21,7 @@ import {
   authorizationisLoadingSelector,
 } from "@/modules/authorization/authorization-selectors";
 import { LogOut } from "styled-icons/boxicons-regular";
+import Link from "next/link";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -72,7 +73,7 @@ export default function Home() {
     <div className="flex flex-col gap-4 p-12">
       <Card>
         <CardBody className="p-2 flex flex-row justify-between items-center">
-          <h1 className="text-xl font-bold">Супер пупер чат</h1>
+          <h1 className="text-xl font-extrabold">Супер пупер чат</h1>
           <Button
             color="primary"
             variant="light"
@@ -92,6 +93,9 @@ export default function Home() {
           label="Название чата"
         />
         <Button onClick={createChantHandler}>Создать чат</Button>
+        <Link href="/login" color="primary">
+          Button Link
+        </Link>
         <div className="flex flex-col gap-2">
           {isLoading ? (
             <Spinner />

@@ -2,6 +2,7 @@ import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { verifyToken } from "@/utils/auth-utils/jwt";
 import { NextApiResponse, NextApiRequest } from "next";
 import { TRootResponseData } from "@/types/root-types";
+import prisma from "@/lib/prisma";
 
 export function protectedRoute(handler: any) {
   return async (
@@ -21,7 +22,21 @@ export function protectedRoute(handler: any) {
 
       const decodedToken = verifyToken(token);
 
-      return handler(req, res);
+      const user = await prisma.users.findFirst({
+        where: {
+          id: decodedToken.userId,
+        },
+      });
+
+      if (user) {
+        return handler(req, res);
+      } else {
+        return res.send({
+          message: "Пользователь не авторизован",
+          success: false,
+          code: 401,
+        });
+      }
     } catch (error) {
       if (error instanceof JsonWebTokenError) {
         return res.send({

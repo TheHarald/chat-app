@@ -1,6 +1,6 @@
 import { TOKEN_EXPIRED_DAYS } from "@/types/root-constants";
 import { TJWTCreatePaload, TJWTPayload } from "@/types/root-types";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const secret = process.env.JWT_SECRET || "your-secret-key";
 
@@ -9,7 +9,7 @@ export function signToken(data: TJWTCreatePaload): string {
 }
 
 export function verifyToken(token: string) {
-  return jwt.verify(token, secret);
+  return jwt.verify(token, secret) as JwtPayload;
 }
 export function parseJwt(token: string): TJWTPayload {
   return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
