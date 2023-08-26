@@ -42,7 +42,7 @@ function ShowHidePassword({
   );
 }
 
-export default function Login() {
+export default function LoginPage() {
   const { name, password } = useSelector(authorizationFormsSelector);
   const isLoading = useSelector(authorizationisLoadingSelector);
 
