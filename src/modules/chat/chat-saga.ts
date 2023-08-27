@@ -3,6 +3,7 @@ import { call, takeEvery } from "redux-saga/effects";
 import {
   ADD_CHAT,
   CHATS_SET_IS_LOADING,
+  CHAT_CONNECT,
   CREATE_CHAT,
   GET_CHATS,
   SET_CHATS,
@@ -15,8 +16,9 @@ import Router from "next/router";
 import { SHOW_NOTIFICATION } from "../notifications/notification-constants";
 import { chatsFiledsSelector } from "./chat-selectors";
 import { uuidv4 } from "@/utils/uuid";
+import { Socket, io } from "socket.io-client";
 
-export type TCreateChatRequestData = Omit<Chats, "id">;
+export type TCreateChatRequestData = Omit<Chats, "id" | "creatorId">;
 
 async function createChat(data: TCreateChatRequestData) {
   return typedFetch<TCreateChatRequestData, TRootResponseData<Chats>>(
@@ -31,8 +33,8 @@ async function getChats() {
 }
 
 export function isValidField(field: string) {
-  const wordhMore4 = /^\w{4,}$/;
-  return wordhMore4.test(field);
+  const wordsMore4 = /^\w{4,}$/;
+  return wordsMore4.test(field);
 }
 
 function* createChatWorker(): SagaIterator {
@@ -109,7 +111,15 @@ function* getChatsWorker(): SagaIterator {
   });
 }
 
+function* testSocket(): SagaIterator {
+  // const socket = io("<wss://localhost:3000/api/socket>");
+  // console.log(socket);
+  // yield call(fetch, "/api/socket");
+  // socket = io();
+}
+
 export function* chatsWatcher(): SagaIterator {
   yield takeEvery(GET_CHATS, getChatsWorker);
   yield takeEvery(CREATE_CHAT, createChatWorker);
+  yield takeEvery(CHAT_CONNECT, testSocket);
 }

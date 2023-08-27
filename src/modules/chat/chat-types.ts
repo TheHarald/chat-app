@@ -3,6 +3,8 @@ import {
   ADD_CHAT,
   CHANGE_CHAT_NAME,
   CHATS_SET_IS_LOADING,
+  CHAT_CONNECT,
+  CHAT_DISCONNECT,
   CREATE_CHAT,
   GET_CHATS,
   SET_CHATS,
@@ -40,10 +42,19 @@ export type TChangeChatNameAction = {
   chatName: string;
 };
 
+export type TSocketChatConnect = {
+  type: typeof CHAT_CONNECT;
+};
+export type TSocketChatDisconnect = {
+  type: typeof CHAT_DISCONNECT;
+};
+
 export type TChatModuleActions =
   | TGetChatsAction
   | TSetIsLoadingChatAction
   | TSetCahtsAction
   | TCreateCahtAction
   | TChangeChatNameAction
+  | TSocketChatConnect
+  | TSocketChatDisconnect
   | TAddChatAction;

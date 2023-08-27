@@ -1,6 +1,8 @@
+import { useDispatch } from "@/hooks/hooks";
+import { CHAT_CONNECT } from "@/modules/chat/chat-constants";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { ArrowBack } from "styled-icons/ionicons-outline";
 
 type TChatProps = {};
@@ -9,9 +11,17 @@ function ChatPage(props: TChatProps) {
   const router = useRouter();
   const { id } = router.query;
 
+  const dispatch = useDispatch();
+
   const backHandler = () => {
     router.back();
   };
+
+  useEffect(() => {
+    dispatch({
+      type: CHAT_CONNECT,
+    });
+  }, []);
 
   return (
     <>
