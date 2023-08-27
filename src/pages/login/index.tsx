@@ -20,9 +20,10 @@ import {
   authorizationisLoadingSelector,
 } from "@/modules/authorization/authorization-selectors";
 import { useRouter } from "next/router";
-import { Info } from "styled-icons/fluentui-system-regular";
+
 import { useState } from "react";
 import { Eye, EyeSlash } from "styled-icons/bootstrap";
+import LoginInfo from "@/components/login-info/login-info";
 
 function ShowHidePassword({
   isVisible,
@@ -89,28 +90,17 @@ export default function LoginPage() {
         <CardBody className="p-4 flex flex-col gap-2 min-w-[320px]">
           <h1 className="text-2xl">Авторизация</h1>
           <div className="flex flex-col gap-2">
-            <div className="flex flex-row gap-2 items-end">
+            <div className="flex flex-row gap-2 items-center">
               <Input
                 labelPlacement="outside"
                 label="Логин"
                 value={name}
                 placeholder="Введите логин"
                 onChange={changeNameHandler}
+                // errorMessage="test"
+                // validationState="invalid"
+                endContent={<LoginInfo />}
               />
-              <Popover placement="right">
-                <PopoverTrigger>
-                  <Button variant="light" isIconOnly>
-                    <Info size={24} />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="px-1 py-2 max-w-[180px]">
-                    <div className="text-tiny">
-                      Логин будет использован в качестве никнейма
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
             </div>
             <Input
               labelPlacement="outside"

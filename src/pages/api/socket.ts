@@ -62,12 +62,8 @@ export default function SocketHandler(
     });
 
     socket.on(CHAT_LEAVE_CHAT, (currentChatId: string) => {
-      // socket.leave(currentChatId);
+      socket.leave(currentChatId);
       console.log(`User left room: ${currentChatId}`);
-    });
-    socket.on(CHAT_LEAVE_CHAT, (chatId: string) => {
-      socket.leave(chatId);
-      console.log(`User left room: ${chatId}`);
     });
 
     socket.on("disconnect", () => {
