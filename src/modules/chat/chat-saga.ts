@@ -31,6 +31,9 @@ async function createChat(data: TCreateChatRequestData) {
 async function getChats() {
   return typedFetch<{}, TRootResponseData<Array<Chats>>>("/api/chat", "GET");
 }
+async function getSocket() {
+  return typedFetch<{}, {}>("/api/socket", "GET");
+}
 
 export function isValidField(field: string) {
   const wordsMore4 = /^\w{4,}$/;
@@ -112,8 +115,8 @@ function* getChatsWorker(): SagaIterator {
 }
 
 function* testSocket(): SagaIterator {
-  // const socket = io("<wss://localhost:3000/api/socket>");
-  // console.log(socket);
+  const socket = yield* callTs(getSocket);
+  console.log(socket);
   // yield call(fetch, "/api/socket");
   // socket = io();
 }

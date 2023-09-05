@@ -17,3 +17,16 @@ export type TJWTPayload = {
 } & TJWTCreatePaload;
 
 export type TUserInfo = Omit<Users, "password">;
+
+export type TSocketSendMessagePayload = {
+  userName: string;
+  roomId: string;
+  authorId: string;
+  text: string;
+};
+
+export type TSocketJoinLeavePayload = {
+  roomId: string;
+  userName: string;
+  userId: string;
+};
