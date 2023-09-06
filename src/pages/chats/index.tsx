@@ -28,7 +28,6 @@ function ChatsPage(props: TChatsProps) {
 
   return (
     <div>
-      <h1>Chats</h1>
       <div className="grid grid-cols-3 gap-2">
         {isLoading ? (
           <Spinner />

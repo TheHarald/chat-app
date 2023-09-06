@@ -1,8 +1,10 @@
 import {
   ADD_CHAT,
+  ADD_MESSAGE,
   CHANGE_CHAT_NAME,
   CHATS_SET_IS_LOADING,
   SET_CHATS,
+  SET_MESSAGES,
 } from "./chat-constants";
 import { TChatModuleActions, TChatModuleState } from "./chat-types";
 
@@ -12,6 +14,7 @@ const initialState: TChatModuleState = {
   forms: {
     chatName: "",
   },
+  messages: [],
 };
 
 export const chatsReducer = (
@@ -45,6 +48,20 @@ export const chatsReducer = (
           ...state.forms,
           chatName: action.chatName,
         },
+      };
+    }
+
+    case ADD_MESSAGE: {
+      return {
+        ...state,
+        messages: [...state.messages, action.message],
+      };
+    }
+
+    case SET_MESSAGES: {
+      return {
+        ...state,
+        messages: action.messages,
       };
     }
 

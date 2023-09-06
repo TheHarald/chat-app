@@ -6,7 +6,9 @@ import {
   CHAT_CONNECT,
   CREATE_CHAT,
   GET_CHATS,
+  GET_MESSAGES,
   SET_CHATS,
+  SET_MESSAGES,
 } from "./chat-constants";
 import { typedFetch } from "@/utils/request-utils";
 import { TRootResponseData } from "@/types/root-types";
@@ -17,6 +19,7 @@ import { SHOW_NOTIFICATION } from "../notifications/notification-constants";
 import { chatsFiledsSelector } from "./chat-selectors";
 import { uuidv4 } from "@/utils/uuid";
 import { Socket, io } from "socket.io-client";
+import { TChatMessage, TChatModuleGetMessagesAction } from "./chat-types";
 
 export type TCreateChatRequestData = Omit<Chats, "id" | "creatorId">;
 
@@ -33,6 +36,12 @@ async function getChats() {
 }
 async function getSocket() {
   return typedFetch<{}, {}>("/api/socket", "GET");
+}
+async function getMessages(id: string) {
+  return typedFetch<{}, TRootResponseData<Array<TChatMessage>>>(
+    `/api/chat/messages/${id}`,
+    "GET"
+  );
 }
 
 export function isValidField(field: string) {
@@ -121,8 +130,40 @@ function* testSocket(): SagaIterator {
   // socket = io();
 }
 
+function* getMessagesWorker(
+  action: TChatModuleGetMessagesAction
+): SagaIterator {
+  yield put({
+    type: CHATS_SET_IS_LOADING,
+    isLoading: true,
+  });
+  const response = yield* callTs(getMessages, action.roomId);
+
+  if (response.success && response.data) {
+    yield put({
+      type: SET_MESSAGES,
+      messages: response.data,
+    });
+  } else {
+    yield put({
+      type: SHOW_NOTIFICATION,
+      notification: {
+        title: response.message || "Не удалось сообщения",
+        isVisible: true,
+        id: uuidv4(),
+      },
+    });
+  }
+
+  yield put({
+    type: CHATS_SET_IS_LOADING,
+    isLoading: false,
+  });
+}
+
 export function* chatsWatcher(): SagaIterator {
   yield takeEvery(GET_CHATS, getChatsWorker);
   yield takeEvery(CREATE_CHAT, createChatWorker);
   yield takeEvery(CHAT_CONNECT, testSocket);
+  yield takeEvery(GET_MESSAGES, getMessagesWorker);
 }

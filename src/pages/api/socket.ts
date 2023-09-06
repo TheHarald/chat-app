@@ -62,7 +62,12 @@ export default function SocketHandler(
         },
       });
 
-      io.sockets.in(roomId).emit(CHAT_RECIVE_MESSAGE, payload);
+      io.sockets.in(roomId).emit(CHAT_RECIVE_MESSAGE, {
+        ...message,
+        author: {
+          name: userName,
+        },
+      });
     });
 
     socket.on(CHAT_JOIN_ROOM, async (payload: TSocketJoinLeavePayload) => {

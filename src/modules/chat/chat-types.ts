@@ -1,13 +1,16 @@
-import { Chats } from "@prisma/client";
+import { Chats, Messages } from "@prisma/client";
 import {
   ADD_CHAT,
+  ADD_MESSAGE,
   CHANGE_CHAT_NAME,
   CHATS_SET_IS_LOADING,
   CHAT_CONNECT,
   CHAT_DISCONNECT,
   CREATE_CHAT,
   GET_CHATS,
+  GET_MESSAGES,
   SET_CHATS,
+  SET_MESSAGES,
 } from "./chat-constants";
 
 export type TChatModuleState = {
@@ -15,6 +18,13 @@ export type TChatModuleState = {
   isLoading: boolean;
   forms: {
     chatName: string;
+  };
+  messages: Array<TChatMessage>;
+};
+
+export type TChatMessage = Messages & {
+  author: {
+    name: string;
   };
 };
 
@@ -49,6 +59,20 @@ export type TSocketChatDisconnect = {
   type: typeof CHAT_DISCONNECT;
 };
 
+export type TChatModuleSetMessagesAction = {
+  type: typeof SET_MESSAGES;
+  messages: Array<TChatMessage>;
+};
+export type TChatModuleAddMessagesAction = {
+  type: typeof ADD_MESSAGE;
+  message: TChatMessage;
+};
+
+export type TChatModuleGetMessagesAction = {
+  type: typeof GET_MESSAGES;
+  roomId: string;
+};
+
 export type TChatModuleActions =
   | TGetChatsAction
   | TSetIsLoadingChatAction
@@ -57,4 +81,7 @@ export type TChatModuleActions =
   | TChangeChatNameAction
   | TSocketChatConnect
   | TSocketChatDisconnect
+  | TChatModuleSetMessagesAction
+  | TChatModuleAddMessagesAction
+  | TChatModuleGetMessagesAction
   | TAddChatAction;

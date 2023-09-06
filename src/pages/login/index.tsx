@@ -52,7 +52,6 @@ export default function LoginPage() {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const changeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
@@ -78,10 +77,6 @@ export default function LoginPage() {
     dispatch({
       type: REGISTER_ACCOUNT_ACTION,
     });
-  };
-
-  const checkAuth = () => {
-    router.push("/api/check-auth");
   };
 
   return (
@@ -126,9 +121,6 @@ export default function LoginPage() {
             color="primary"
           >
             Зергистрироваться
-          </Button>
-          <Button isLoading={isLoading} onClick={checkAuth} color="primary">
-            Проверить авторизацию
           </Button>
         </CardBody>
       </Card>
