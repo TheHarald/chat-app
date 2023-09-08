@@ -17,7 +17,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const disconnectHandler = () => {
     socket.disconnect();
-    console.log("disconnectHandler");
   };
 
   useEffect(() => {

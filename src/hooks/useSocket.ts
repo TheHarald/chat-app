@@ -8,14 +8,11 @@ import {
 import { TChatMessage } from "@/modules/chat/chat-types";
 import { ADD_MESSAGE, SET_ROOM_USERS } from "@/modules/chat/chat-constants";
 import { TSocketJoinUserResponseData } from "@/types/root-types";
-import { useEffect } from "react";
 
 export function useSocket() {
   const dispatch = useDispatch();
-  console.log("useSocket");
-  useEffect(() => {
+  function initListeners() {
     socket.on(CHAT_RECIVE_MESSAGE, (data: TChatMessage) => {
-      console.log("CHAT_RECIVE_MESSAGE", data);
       dispatch({
         type: ADD_MESSAGE,
         message: data,
@@ -35,5 +32,14 @@ export function useSocket() {
         roomUsers: data,
       });
     });
-  }, []);
+  }
+
+  function removeListeners() {
+    socket.removeAllListeners();
+  }
+
+  return {
+    removeListeners,
+    initListeners,
+  };
 }

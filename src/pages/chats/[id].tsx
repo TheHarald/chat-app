@@ -22,24 +22,19 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowBack } from "styled-icons/ionicons-outline";
 import {
   authorizationUserInfoSelector,
   authorizationisAuthorizedSelector,
   authorizationisLoadingSelector,
 } from "@/modules/authorization/authorization-selectors";
-import {
-  TSocketJoinUserResponseData,
-  TSocketSendMessagePayload,
-} from "@/types/root-types";
 import { socket } from "../socket";
 import {
   chatsMessagesSelector,
   chatsRoomUsersSelector,
 } from "@/modules/chat/chat-selectors";
-import { TChatMessage } from "@/modules/chat/chat-types";
-import { useSocket } from "@/hooks/useSocket";
+import MessageItem from "@/components/messega-item/message-item";
 
 type TChatProps = {};
 
@@ -49,6 +44,9 @@ function ChatPage(props: TChatProps) {
   const roomId = Array.isArray(id) ? id[0] : id;
 
   const dispatch = useDispatch();
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { name, id: userId } = useSelector(authorizationUserInfoSelector);
   const isAuthorized = useSelector(authorizationisAuthorizedSelector);
@@ -62,6 +60,15 @@ function ChatPage(props: TChatProps) {
   const backHandler = () => {
     router.back();
   };
+
+  const scrollToBottom = () => {
+    console.log("scrol");
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     if (!isAuthorized || !roomId) {
@@ -103,7 +110,8 @@ function ChatPage(props: TChatProps) {
     });
   };
 
-  const sendMessageHandler = () => {
+  const sendMessageHandler = (e: React.FormEvent) => {
+    e.preventDefault();
     socket.emit(CHAT_SEND_MESSAGE, {
       userName: name,
       roomId,
@@ -111,6 +119,7 @@ function ChatPage(props: TChatProps) {
       text: message,
     });
     setMessage("");
+    inputRef.current?.focus();
   };
 
   return (
@@ -136,33 +145,46 @@ function ChatPage(props: TChatProps) {
           )}
         </div>
       </div>
+
       <ScrollShadow
         hideScrollBar
         orientation="vertical"
         className="max-h-[380px]"
+        isEnabled={false}
       >
         {isLoading ? (
           <Spinner />
         ) : (
-          <div className="flex flex-col gap-2">
-            {messages.map(({ text, author, id }) => {
+          <div className="flex flex-col gap-4">
+            {messages.map(({ text, author, id, authorId }) => {
               return (
-                <div key={id}>
-                  {author.name} : {text}
-                </div>
+                <MessageItem
+                  key={id}
+                  text={text}
+                  isMy={authorId === userId}
+                  userName={author.name}
+                />
               );
             })}
           </div>
         )}
+        <div ref={messagesEndRef} />
       </ScrollShadow>
-      <div className="flex flex-row gap-2">
+      <form
+        onSubmit={sendMessageHandler}
+        className="flex flex-row gap-2"
+        autoComplete="off"
+      >
         <Input
           placeholder="Сообщение"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          ref={inputRef}
         />
-        <Button onClick={sendMessageHandler}>Отправить</Button>
-      </div>
+        <Button type="submit" color="primary">
+          Отправить
+        </Button>
+      </form>
     </>
   );
 }

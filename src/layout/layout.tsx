@@ -1,25 +1,32 @@
 import PageHeader from "@/components/header/page-header";
 import NavigationBar from "@/components/navbar/navigation-bar";
-import { useDispatch } from "@/hooks/hooks";
+import { useDispatch, useSelector } from "@/hooks/hooks";
 import { useSocket } from "@/hooks/useSocket";
 import {
   AUTHORIZATION_CHECK_AUTH,
   AUTHORIZATION_GET_USER_INFO,
 } from "@/modules/authorization/authorization-constants";
+import { authorizationisAuthorizedSelector } from "@/modules/authorization/authorization-selectors";
 import { Card, CardBody } from "@nextui-org/react";
 import React, { PropsWithChildren, useEffect } from "react";
 const Layout = ({ children }: PropsWithChildren) => {
   const dispatch = useDispatch();
 
-  useSocket();
+  const { initListeners, removeListeners } = useSocket();
 
   useEffect(() => {
+    initListeners();
+
     dispatch({
       type: AUTHORIZATION_CHECK_AUTH,
     });
     dispatch({
       type: AUTHORIZATION_GET_USER_INFO,
     });
+    return () => {
+      console.log("Layout unmount");
+      removeListeners();
+    };
   }, []);
 
   return (
