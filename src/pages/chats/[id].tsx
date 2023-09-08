@@ -3,6 +3,7 @@ import {
   ADD_MESSAGE,
   CHAT_CONNECT,
   GET_MESSAGES,
+  SET_ROOM_USERS,
 } from "@/modules/chat/chat-constants";
 import {
   CHAT_JOIN_ROOM,
@@ -12,7 +13,14 @@ import {
   CHAT_USER_CONNECTED,
   CHAT_USER_DISCONNECTED,
 } from "@/types/socket-constants";
-import { Badge, Button, Chip, Input, Spinner } from "@nextui-org/react";
+import {
+  Badge,
+  Button,
+  Chip,
+  Input,
+  ScrollShadow,
+  Spinner,
+} from "@nextui-org/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { ArrowBack } from "styled-icons/ionicons-outline";
@@ -21,10 +29,17 @@ import {
   authorizationisAuthorizedSelector,
   authorizationisLoadingSelector,
 } from "@/modules/authorization/authorization-selectors";
-import { TSocketSendMessagePayload } from "@/types/root-types";
+import {
+  TSocketJoinUserResponseData,
+  TSocketSendMessagePayload,
+} from "@/types/root-types";
 import { socket } from "../socket";
-import { chatsMessagesSelector } from "@/modules/chat/chat-selectors";
+import {
+  chatsMessagesSelector,
+  chatsRoomUsersSelector,
+} from "@/modules/chat/chat-selectors";
 import { TChatMessage } from "@/modules/chat/chat-types";
+import { useSocket } from "@/hooks/useSocket";
 
 type TChatProps = {};
 
@@ -40,15 +55,13 @@ function ChatPage(props: TChatProps) {
   const isLoading = useSelector(authorizationisLoadingSelector);
 
   const messages = useSelector(chatsMessagesSelector);
+  const roomUsers = useSelector(chatsRoomUsersSelector);
 
   const [message, setMessage] = useState("");
-  const [users, setUsers] = useState<string[]>([]);
 
   const backHandler = () => {
     router.back();
   };
-
-  console.log("render");
 
   useEffect(() => {
     if (!isAuthorized || !roomId) {
@@ -59,7 +72,7 @@ function ChatPage(props: TChatProps) {
       socket.connect();
     }
 
-    console.log("mount");
+    window.addEventListener("unload", leaveRoomHandler);
 
     joinRoomHandler();
 
@@ -68,29 +81,11 @@ function ChatPage(props: TChatProps) {
       roomId: roomId || "empty",
     });
 
-    socket.on(CHAT_RECIVE_MESSAGE, (data: TChatMessage) => {
-      console.log(data);
-      dispatch({
-        type: ADD_MESSAGE,
-        message: data,
-      });
-    });
-
-    socket.on(CHAT_USER_CONNECTED, (data) => {
-      // console.log(data);
-      // setUsers(data);
-    });
-
-    socket.on(CHAT_USER_DISCONNECTED, (data) => {
-      // console.log(data);
-      // setUsers(data);
-    });
-
     return () => {
       leaveRoomHandler();
-      socket.disconnect();
+      window.removeEventListener("unload", leaveRoomHandler);
     };
-  }, [dispatch]);
+  }, []);
 
   const joinRoomHandler = () => {
     socket.emit(CHAT_JOIN_ROOM, {
@@ -132,25 +127,34 @@ function ChatPage(props: TChatProps) {
         </Button>
         <h2 className="text-xl font-semibold">Chat id: {id}</h2>
         <div className="flex flex-row gap-2">
-          {users.map((user, i) => {
-            return <Chip key={i}>{user}</Chip>;
-          })}
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            roomUsers.map((roomUser, i) => {
+              return <Chip key={i}>{roomUser.user.name}</Chip>;
+            })
+          )}
         </div>
       </div>
-
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div className="flex flex-col gap-2">
-          {messages.map(({ text, author, id }) => {
-            return (
-              <div key={id}>
-                {author.name} : {text}
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <ScrollShadow
+        hideScrollBar
+        orientation="vertical"
+        className="max-h-[380px]"
+      >
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <div className="flex flex-col gap-2">
+            {messages.map(({ text, author, id }) => {
+              return (
+                <div key={id}>
+                  {author.name} : {text}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </ScrollShadow>
       <div className="flex flex-row gap-2">
         <Input
           placeholder="Сообщение"

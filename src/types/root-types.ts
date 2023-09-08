@@ -1,4 +1,4 @@
-import { Users } from "@prisma/client";
+import { Users, UsersOnChats } from "@prisma/client";
 
 export type TRootResponseData<T = void> = {
   message?: string;
@@ -29,4 +29,10 @@ export type TSocketJoinLeavePayload = {
   roomId: string;
   userName: string;
   userId: string;
+};
+
+export type TSocketJoinUserResponseData = UsersOnChats & {
+  user: {
+    name: string;
+  };
 };

@@ -29,8 +29,6 @@ interface NextApiResponseWithSocket extends NextApiResponse {
   socket: SocketWithIO;
 }
 
-let users: Array<string> = [];
-
 export default function SocketHandler(
   _: NextApiRequest,
   res: NextApiResponseWithSocket
@@ -83,7 +81,20 @@ export default function SocketHandler(
         },
       });
 
-      socket.emit(CHAT_USER_CONNECTED, users); // заменить на бд
+      const roomUsers = await prisma.usersOnChats.findMany({
+        where: {
+          roomId,
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      io.sockets.in(roomId).emit(CHAT_USER_CONNECTED, roomUsers);
     });
     socket.on(CHAT_LEAVE_CHAT, async (payload: TSocketJoinLeavePayload) => {
       console.log("leave payload", payload);
@@ -101,7 +112,23 @@ export default function SocketHandler(
         },
       });
 
-      socket.emit(CHAT_USER_DISCONNECTED, users);
+      // eslint-disable-next-line no-console
+      // console.log("leavedUser", leavedUser);
+
+      const roomUsers = await prisma.usersOnChats.findMany({
+        where: {
+          roomId,
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      io.sockets.in(roomId).emit(CHAT_USER_DISCONNECTED, roomUsers);
     });
 
     socket.on("disconnect", () => {

@@ -1,6 +1,7 @@
 import PageHeader from "@/components/header/page-header";
 import NavigationBar from "@/components/navbar/navigation-bar";
 import { useDispatch } from "@/hooks/hooks";
+import { useSocket } from "@/hooks/useSocket";
 import {
   AUTHORIZATION_CHECK_AUTH,
   AUTHORIZATION_GET_USER_INFO,
@@ -9,6 +10,8 @@ import { Card, CardBody } from "@nextui-org/react";
 import React, { PropsWithChildren, useEffect } from "react";
 const Layout = ({ children }: PropsWithChildren) => {
   const dispatch = useDispatch();
+
+  useSocket();
 
   useEffect(() => {
     dispatch({
@@ -21,7 +24,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 lg:p-12">
+      <div className="flex flex-col gap-4  lg:pb-0 lg:p-12">
         <PageHeader />
         <div className="flex flex-row gap-4 w-full">
           <NavigationBar />

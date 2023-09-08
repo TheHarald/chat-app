@@ -5,6 +5,7 @@ import {
   CHATS_SET_IS_LOADING,
   SET_CHATS,
   SET_MESSAGES,
+  SET_ROOM_USERS,
 } from "./chat-constants";
 import { TChatModuleActions, TChatModuleState } from "./chat-types";
 
@@ -15,6 +16,7 @@ const initialState: TChatModuleState = {
     chatName: "",
   },
   messages: [],
+  roomUsers: [],
 };
 
 export const chatsReducer = (
@@ -62,6 +64,13 @@ export const chatsReducer = (
       return {
         ...state,
         messages: action.messages,
+      };
+    }
+
+    case SET_ROOM_USERS: {
+      return {
+        ...state,
+        roomUsers: action.roomUsers,
       };
     }
 

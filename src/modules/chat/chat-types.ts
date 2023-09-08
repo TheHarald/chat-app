@@ -11,7 +11,9 @@ import {
   GET_MESSAGES,
   SET_CHATS,
   SET_MESSAGES,
+  SET_ROOM_USERS,
 } from "./chat-constants";
+import { TSocketJoinUserResponseData } from "@/types/root-types";
 
 export type TChatModuleState = {
   chats: Array<Chats>;
@@ -20,6 +22,7 @@ export type TChatModuleState = {
     chatName: string;
   };
   messages: Array<TChatMessage>;
+  roomUsers: Array<TSocketJoinUserResponseData>;
 };
 
 export type TChatMessage = Messages & {
@@ -72,6 +75,10 @@ export type TChatModuleGetMessagesAction = {
   type: typeof GET_MESSAGES;
   roomId: string;
 };
+export type TChatModuleSetUsersAction = {
+  type: typeof SET_ROOM_USERS;
+  roomUsers: Array<TSocketJoinUserResponseData>;
+};
 
 export type TChatModuleActions =
   | TGetChatsAction
@@ -84,4 +91,5 @@ export type TChatModuleActions =
   | TChatModuleSetMessagesAction
   | TChatModuleAddMessagesAction
   | TChatModuleGetMessagesAction
+  | TChatModuleSetUsersAction
   | TAddChatAction;

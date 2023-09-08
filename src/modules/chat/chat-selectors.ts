@@ -12,3 +12,6 @@ export const chatsFiledsSelector = (s: RootState) => {
 export const chatsMessagesSelector = (s: RootState) => {
   return s.chats.messages;
 };
+export const chatsRoomUsersSelector = (s: RootState) => {
+  return s.chats.roomUsers;
+};
