@@ -5,10 +5,11 @@ type TMessageItemProps = {
   text: string;
   isMy: boolean;
   userName: string;
+  avatar: string;
 };
 
 function MessageItem(props: TMessageItemProps) {
-  const { userName, isMy, text } = props;
+  const { userName, isMy, text, avatar } = props;
 
   return (
     <div
@@ -16,11 +17,11 @@ function MessageItem(props: TMessageItemProps) {
         isMy ? "flex-row-reverse" : "flex-row"
       }`}
     >
-      <Avatar name={userName} radius="sm" />
+      <Avatar src={avatar} radius="sm" />
 
       <p
         className={`text-sm text-white ${
-          isMy ? "bg-blue-500" : "bg-gray-500"
+          isMy ? "bg-primary-400" : "bg-default-400"
         } p-2 rounded-md max-w-[50%]`}
       >
         {text}

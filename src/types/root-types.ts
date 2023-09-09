@@ -1,4 +1,4 @@
-import { Users, UsersOnChats } from "@prisma/client";
+import { Avatars, Users, UsersOnChats } from "@prisma/client";
 
 export type TRootResponseData<T = void> = {
   message?: string;
@@ -16,8 +16,9 @@ export type TJWTPayload = {
   exp: number;
 } & TJWTCreatePaload;
 
-export type TUserInfo = Omit<Users, "password">;
-
+export type TUserInfo = Omit<Users, "password"> & {
+  avatar: Pick<Avatars, "src">;
+};
 export type TSocketSendMessagePayload = {
   userName: string;
   roomId: string;

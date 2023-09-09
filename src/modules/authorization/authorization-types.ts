@@ -16,10 +16,7 @@ export type TAuthorizationModuleState = {
     name: string;
     password: string;
   };
-  userInfo: {
-    name: string;
-    id: string;
-  };
+  userInfo: TUserInfo;
   isAuthorized: boolean;
   isLoading: boolean;
 };

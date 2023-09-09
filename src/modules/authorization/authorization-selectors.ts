@@ -9,6 +9,16 @@ export const authorizationisAuthorizedSelector = (s: RootState) => {
 export const authorizationisLoadingSelector = (s: RootState) => {
   return s.authorization.isLoading ?? false;
 };
+export const authorizationUserInfoAvatarSelector = (s: RootState) => {
+  return s.authorization.userInfo.avatar.src;
+};
 export const authorizationUserInfoSelector = (s: RootState) => {
-  return s.authorization.userInfo ?? { name: "", id: "" };
+  return (
+    s.authorization.userInfo ?? {
+      name: "",
+      id: "",
+      avatarId: "",
+      avatar: { src: "" },
+    }
+  );
 };

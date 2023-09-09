@@ -48,7 +48,11 @@ function ChatPage(props: TChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { name, id: userId } = useSelector(authorizationUserInfoSelector);
+  const {
+    name,
+    id: userId,
+    avatar,
+  } = useSelector(authorizationUserInfoSelector);
   const isAuthorized = useSelector(authorizationisAuthorizedSelector);
   const isLoading = useSelector(authorizationisLoadingSelector);
 
@@ -155,7 +159,7 @@ function ChatPage(props: TChatProps) {
         {isLoading ? (
           <Spinner />
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 p-2">
             {messages.map(({ text, author, id, authorId }) => {
               return (
                 <MessageItem
@@ -163,6 +167,7 @@ function ChatPage(props: TChatProps) {
                   text={text}
                   isMy={authorId === userId}
                   userName={author.name}
+                  avatar={avatar.src}
                 />
               );
             })}

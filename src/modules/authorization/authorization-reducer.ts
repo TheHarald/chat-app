@@ -18,6 +18,10 @@ const initialState: TAuthorizationModuleState = {
   userInfo: {
     name: "",
     id: "",
+    avatarId: "",
+    avatar: {
+      src: "",
+    },
   },
   isAuthorized: false,
   isLoading: false,
@@ -61,11 +65,7 @@ export const authorizationReducer = (
     case AUTHORIZATION_SET_USER_INFO: {
       return {
         ...state,
-        userInfo: {
-          ...state.userInfo,
-          id: action.userInfo.id,
-          name: action.userInfo.name,
-        },
+        userInfo: action.userInfo,
       };
     }
 

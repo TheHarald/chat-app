@@ -1,4 +1,4 @@
-import { Chats, Messages } from "@prisma/client";
+import { Chats, Messages, Users } from "@prisma/client";
 import {
   ADD_CHAT,
   ADD_MESSAGE,

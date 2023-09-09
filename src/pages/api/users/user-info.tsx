@@ -20,6 +20,13 @@ export default protectedRoute(async function handler(
         where: {
           id: userId,
         },
+        include: {
+          avatar: {
+            select: {
+              src: true,
+            },
+          },
+        },
       });
 
       if (user) {
@@ -28,6 +35,10 @@ export default protectedRoute(async function handler(
           data: {
             name: user.name,
             id: user.id,
+            avatarId: user.avatarId,
+            avatar: {
+              src: user.avatar?.src || "",
+            },
           },
         });
         return;
