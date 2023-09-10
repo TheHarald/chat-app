@@ -50,7 +50,7 @@ export default function SocketHandler(
     socket.on(CHAT_SEND_MESSAGE, async (payload: TSocketSendMessagePayload) => {
       console.log("send payload", payload);
 
-      const { roomId, authorId, text, userName } = payload;
+      const { roomId, authorId, text, userName, avatarSrc } = payload;
 
       const message = await prisma.messages.create({
         data: {
@@ -64,6 +64,9 @@ export default function SocketHandler(
         ...message,
         author: {
           name: userName,
+          avatar: {
+            src: avatarSrc,
+          },
         },
       });
     });

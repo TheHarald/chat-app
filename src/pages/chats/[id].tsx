@@ -34,7 +34,7 @@ import {
   chatsMessagesSelector,
   chatsRoomUsersSelector,
 } from "@/modules/chat/chat-selectors";
-import MessageItem from "@/components/messega-item/message-item";
+import MessageItem from "@/components/message-item/message-item";
 import { soketEmitTs } from "@/utils/socket";
 import {
   TSocketJoinLeavePayload,
@@ -126,6 +126,7 @@ function ChatPage(props: TChatProps) {
       roomId,
       authorId: userId,
       text: message,
+      avatarSrc: avatar.src,
     });
     setMessage("");
     inputRef.current?.focus();
@@ -172,7 +173,7 @@ function ChatPage(props: TChatProps) {
                   text={text}
                   isMy={authorId === userId}
                   userName={author.name}
-                  avatar={avatar.src}
+                  avatar={author.avatar?.src || ""}
                 />
               );
             })}

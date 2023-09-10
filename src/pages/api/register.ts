@@ -31,7 +31,7 @@ export default async function handler(
       },
     });
     if (existedUser) {
-      res.send({
+      return res.send({
         message: "Пользователь с таким именем уже существует",
         success: false,
       });

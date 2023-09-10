@@ -4,11 +4,77 @@ import { protectedRoute } from "../protected-route";
 import { parseJwt } from "@/utils/auth-utils/jwt";
 import { TRootResponseData, TUserInfo } from "@/types/root-types";
 
+type TUserInfoChnageAvatarBody = {
+  avatarId: string;
+};
+
+interface TChnageAvatarApiRequest extends NextApiRequest {
+  body: TUserInfoChnageAvatarBody;
+}
+
 export default protectedRoute(async function handler(
-  req: NextApiRequest,
+  req: TChnageAvatarApiRequest,
   res: NextApiResponse<TRootResponseData<TUserInfo>>
 ) {
-  const { method } = req;
+  const { method, body } = req;
+
+  if (method === "PATCH") {
+    const token = req.cookies.token;
+
+    if (token) {
+      const { userId } = parseJwt(token);
+
+      const { avatarId } = body;
+
+      await prisma.users.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          avatarId,
+        },
+      });
+
+      const user = await prisma.users.findFirst({
+        where: {
+          id: userId,
+        },
+        include: {
+          avatar: {
+            select: {
+              src: true, // TODO return full avatar data
+            },
+          },
+        },
+      });
+
+      if (user) {
+        res.send({
+          success: true,
+          data: {
+            name: user.name,
+            id: user.id,
+            avatarId: user.avatarId,
+            avatar: {
+              src: user.avatar?.src || "",
+            },
+          },
+        });
+        return;
+      }
+      res.send({
+        success: false,
+        message: "Пользователь не найден",
+      });
+      return;
+    }
+
+    return res.send({
+      message: "Пользователь не авторизован",
+      success: false,
+      code: 401,
+    });
+  }
 
   if (method === "GET") {
     const token = req.cookies.token;
@@ -23,7 +89,7 @@ export default protectedRoute(async function handler(
         include: {
           avatar: {
             select: {
-              src: true,
+              src: true, // TODO return full avatar data
             },
           },
         },

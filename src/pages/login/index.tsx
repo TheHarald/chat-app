@@ -120,7 +120,7 @@ export default function LoginPage() {
             onClick={registerHandler}
             color="primary"
           >
-            Зергистрироваться
+            Зарегистрироваться
           </Button>
         </CardBody>
       </Card>

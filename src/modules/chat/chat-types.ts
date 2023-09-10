@@ -1,4 +1,4 @@
-import { Chats, Messages, Users } from "@prisma/client";
+import { Avatars, Chats, Messages, Users } from "@prisma/client";
 import {
   ADD_CHAT,
   ADD_MESSAGE,
@@ -27,6 +27,9 @@ export type TChatModuleState = {
 
 export type TChatMessage = Messages & {
   author: {
+    avatar: {
+      src: string;
+    } | null;
     name: string;
   };
 };

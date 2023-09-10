@@ -10,16 +10,20 @@ import { notificationReducer } from "@/modules/notifications/notification-reduce
 import { authorizationReducer } from "@/modules/authorization/authorization-reducer";
 import { chatsReducer } from "@/modules/chat/chat-reducer";
 import { chatsWatcher } from "@/modules/chat/chat-saga";
+import { avatarsReducer } from "@/modules/avatars/avatars-reducer";
+import { avatarsWatcher } from "@/modules/avatars/avatars-saga";
 
 const rootReducer = combineReducers({
   notifications: notificationReducer,
   authorization: authorizationReducer,
   chats: chatsReducer,
+  avatars: avatarsReducer,
 });
 
 function* rootSaga() {
   yield fork(authorizationWorker);
   yield fork(chatsWatcher);
+  yield fork(avatarsWatcher);
 }
 
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {

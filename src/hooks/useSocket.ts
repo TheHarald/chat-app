@@ -13,6 +13,7 @@ export function useSocket() {
   const dispatch = useDispatch();
   function initListeners() {
     socket.on(CHAT_RECIVE_MESSAGE, (data: TChatMessage) => {
+      console.log(data);
       dispatch({
         type: ADD_MESSAGE,
         message: data,

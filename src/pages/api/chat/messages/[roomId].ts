@@ -3,8 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { TRootResponseData } from "@/types/root-types";
 import { protectedRoute } from "../../protected-route";
 import prisma from "@/lib/prisma";
+import { TChatMessage } from "@/modules/chat/chat-types";
 
-type ResponseDataType = Array<Messages>;
+type ResponseDataType = Array<TChatMessage>;
 
 export default protectedRoute(async function handler(
   req: NextApiRequest,
@@ -26,6 +27,11 @@ export default protectedRoute(async function handler(
           author: {
             select: {
               name: true,
+              avatar: {
+                select: {
+                  src: true,
+                },
+              },
             },
           },
         },

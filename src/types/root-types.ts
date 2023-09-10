@@ -24,6 +24,7 @@ export type TSocketSendMessagePayload = {
   roomId: string;
   authorId: string;
   text: string;
+  avatarSrc: string;
 };
 
 export type TSocketJoinLeavePayload = {
