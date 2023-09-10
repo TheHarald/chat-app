@@ -19,13 +19,13 @@ const rutes = [
     title: "Профиль",
     icon: <User size={24} />,
     id: uuidv4(),
-    href: "profile",
+    href: "/profile",
   },
   {
     title: "Чаты",
     icon: <ChatMultiple size={24} />,
     id: uuidv4(),
-    href: "chats",
+    href: "/chats",
   },
 ];
 

@@ -112,9 +112,6 @@ export default function SocketHandler(
         },
       });
 
-      // eslint-disable-next-line no-console
-      // console.log("leavedUser", leavedUser);
-
       const roomUsers = await prisma.usersOnChats.findMany({
         where: {
           roomId,

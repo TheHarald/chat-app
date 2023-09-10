@@ -35,13 +35,18 @@ import {
   chatsRoomUsersSelector,
 } from "@/modules/chat/chat-selectors";
 import MessageItem from "@/components/messega-item/message-item";
+import { soketEmitTs } from "@/utils/socket";
+import {
+  TSocketJoinLeavePayload,
+  TSocketSendMessagePayload,
+} from "@/types/root-types";
 
 type TChatProps = {};
 
 function ChatPage(props: TChatProps) {
   const router = useRouter();
   const { id } = router.query;
-  const roomId = Array.isArray(id) ? id[0] : id;
+  const roomId = Array.isArray(id) ? id[0] : id || "";
 
   const dispatch = useDispatch();
 
@@ -99,7 +104,7 @@ function ChatPage(props: TChatProps) {
   }, []);
 
   const joinRoomHandler = () => {
-    socket.emit(CHAT_JOIN_ROOM, {
+    soketEmitTs<TSocketJoinLeavePayload>(CHAT_JOIN_ROOM, {
       roomId,
       userName: name,
       userId,
@@ -107,7 +112,7 @@ function ChatPage(props: TChatProps) {
   };
 
   const leaveRoomHandler = () => {
-    socket.emit(CHAT_LEAVE_CHAT, {
+    soketEmitTs<TSocketJoinLeavePayload>(CHAT_LEAVE_CHAT, {
       roomId,
       userName: name,
       userId,
@@ -116,7 +121,7 @@ function ChatPage(props: TChatProps) {
 
   const sendMessageHandler = (e: React.FormEvent) => {
     e.preventDefault();
-    socket.emit(CHAT_SEND_MESSAGE, {
+    soketEmitTs<TSocketSendMessagePayload>(CHAT_SEND_MESSAGE, {
       userName: name,
       roomId,
       authorId: userId,
