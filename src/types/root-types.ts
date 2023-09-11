@@ -17,7 +17,7 @@ export type TJWTPayload = {
 } & TJWTCreatePaload;
 
 export type TUserInfo = Omit<Users, "password"> & {
-  avatar: Pick<Avatars, "src">;
+  avatar: Avatars;
 };
 export type TSocketSendMessagePayload = {
   userName: string;

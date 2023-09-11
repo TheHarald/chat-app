@@ -1,5 +1,6 @@
 import { Avatars } from "@prisma/client";
 import {
+  AVATARS_CHANGE_AVATAR,
   AVATARS_CREATE_AVATAR,
   AVATARS_FORM_NAME_CHANGE,
   AVATARS_FORM_SRC_CHANGE,
@@ -42,10 +43,16 @@ export type TAvatarsFromSrcChangeAction = {
   src: string;
 };
 
+export type TAvatarsChangeAvatarAction = {
+  type: typeof AVATARS_CHANGE_AVATAR;
+  avatarId: string;
+};
+
 export type TAvatarsModuleActions =
   | TAvatarsSetIsLoadingAction
   | TAvatarsFromNameChangeAction
   | TAvatarsFromSrcChangeAction
   | TAvatarsCreateAvatarsAction
   | TAvatarsSetAvatarsAction
+  | TAvatarsChangeAvatarAction
   | TAvatarsGetAvatarsAction;

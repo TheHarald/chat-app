@@ -40,11 +40,7 @@ export default protectedRoute(async function handler(
           id: userId,
         },
         include: {
-          avatar: {
-            select: {
-              src: true, // TODO return full avatar data
-            },
-          },
+          avatar: true,
         },
       });
 
@@ -55,8 +51,11 @@ export default protectedRoute(async function handler(
             name: user.name,
             id: user.id,
             avatarId: user.avatarId,
-            avatar: {
-              src: user.avatar?.src || "",
+            avatar: user.avatar || {
+              // TODO Fix
+              id: "",
+              src: "",
+              label: "",
             },
           },
         });
@@ -87,11 +86,7 @@ export default protectedRoute(async function handler(
           id: userId,
         },
         include: {
-          avatar: {
-            select: {
-              src: true, // TODO return full avatar data
-            },
-          },
+          avatar: true,
         },
       });
 
@@ -102,8 +97,11 @@ export default protectedRoute(async function handler(
             name: user.name,
             id: user.id,
             avatarId: user.avatarId,
-            avatar: {
-              src: user.avatar?.src || "",
+            avatar: user.avatar || {
+              // TODO Fix
+              id: "",
+              src: "",
+              label: "",
             },
           },
         });

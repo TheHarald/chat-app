@@ -1,6 +1,7 @@
 import { SagaIterator } from "redux-saga";
 import { takeEvery } from "redux-saga/effects";
 import {
+  AVATARS_CHANGE_AVATAR,
   AVATARS_CREATE_AVATAR,
   AVATARS_GET_AVATARS,
   AVATARS_SET_AVATARS,
@@ -8,11 +9,13 @@ import {
 } from "./avatars-constants";
 import { typedFetch } from "@/utils/request-utils";
 import { Avatars } from "@prisma/client";
-import { TRootResponseData } from "@/types/root-types";
+import { TRootResponseData, TUserInfo } from "@/types/root-types";
 import { callTs, put, selectTs } from "@/redux/sagas/saga-functions";
 import { SHOW_NOTIFICATION } from "../notifications/notification-constants";
 import { uuidv4 } from "@/utils/uuid";
 import { avatarsFormsSelector } from "./avatars-selectors";
+import { TAvatarsChangeAvatarAction } from "./avatars-types";
+import { AUTHORIZATION_SET_USER_INFO } from "../authorization/authorization-constants";
 
 async function getAvatars() {
   return typedFetch<{}, TRootResponseData<Array<Avatars>>>(
@@ -69,9 +72,8 @@ export function isValidField(field: string) {
   return englishMore4.test(field);
 }
 
-export function* createAwatarWorker(): SagaIterator {
+export function* createAvatarWorker(): SagaIterator {
   const { src, avatarName } = yield* selectTs(avatarsFormsSelector);
-  console.log({ src, avatarName });
 
   if (!isValidField(src) && !isValidField(avatarName)) {
     yield put({
@@ -103,7 +105,7 @@ export function* createAwatarWorker(): SagaIterator {
     yield put({
       type: SHOW_NOTIFICATION,
       notification: {
-        title: "при создании аватара произошла ошибка.",
+        title: "При создании аватара произошла ошибка.",
         isVisible: true,
         id: uuidv4(),
       },
@@ -114,7 +116,51 @@ export function* createAwatarWorker(): SagaIterator {
   }
 }
 
+type UpdateAvatarData = {
+  avatarId: string;
+};
+
+async function updateUserAvatar(data: UpdateAvatarData) {
+  return typedFetch<UpdateAvatarData, TRootResponseData<TUserInfo>>(
+    "/api/users/user-info",
+    "PATCH",
+    data
+  );
+}
+
+export function* editAvatarWorker(
+  action: TAvatarsChangeAvatarAction
+): SagaIterator {
+  console.log(action);
+  const { avatarId } = action;
+  const response = yield* callTs(updateUserAvatar, { avatarId });
+  if (response.success && response.data) {
+    yield put({
+      type: AUTHORIZATION_SET_USER_INFO,
+      userInfo: response.data,
+    });
+    yield put({
+      type: SHOW_NOTIFICATION,
+      notification: {
+        title: response.message || "Аватар успешно обновлён",
+        isVisible: true,
+        id: uuidv4(),
+      },
+    });
+  } else {
+    yield put({
+      type: SHOW_NOTIFICATION,
+      notification: {
+        title: response.message || "При обновлении автара что-то пошло не так",
+        isVisible: true,
+        id: uuidv4(),
+      },
+    });
+  }
+}
+
 export function* avatarsWatcher(): SagaIterator {
   yield takeEvery(AVATARS_GET_AVATARS, getAvatarsWorker);
-  yield takeEvery(AVATARS_CREATE_AVATAR, createAwatarWorker);
+  yield takeEvery(AVATARS_CREATE_AVATAR, createAvatarWorker);
+  yield takeEvery(AVATARS_CHANGE_AVATAR, editAvatarWorker);
 }
