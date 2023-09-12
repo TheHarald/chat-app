@@ -1,4 +1,4 @@
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Tooltip } from "@nextui-org/react";
 import React from "react";
 
 type TMessageItemProps = {
@@ -17,7 +17,9 @@ function MessageItem(props: TMessageItemProps) {
         isMy ? "flex-row-reverse" : "flex-row"
       }`}
     >
-      <Avatar src={avatar} radius="sm" />
+      <Tooltip content={userName}>
+        <Avatar src={avatar} radius="sm" className="cursor-pointer" />
+      </Tooltip>
 
       <p
         className={`text-sm text-white ${
