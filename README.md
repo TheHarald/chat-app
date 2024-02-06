@@ -1,50 +1,76 @@
-### Запуск
+<h2>Технологии</h2>
+<ul>
+  <li>Next.js</li>
+  <li>TypeScript</li>
+  <li>Redux</li>
+  <li>Redux Saga</li>
+  <li>Tailwind CSS</li>
+  <li>Next UI</li>
+  <li>PrismaORM</li>
+  <li>Socket.IO</li>
+  <li>JWT</li>
+</ul>
+  
+<h2>Установка и запуск</h2>
+<p>Для запуска необходим node.js</p>
 
-- Для запуская необходим Node.js
+<p>Установка зависимотсетей</p>
 
-Установить зависимости
-
+```bash
+npm install
 ```
-npm i
-```
+<p>Запуск в режиме разработки</p>
 
-Запуск
-
-```
+```bash
 npm run dev
 ```
 
-Приложение будет доступно по адресу:
-http://localhost:3000/
+<p>Сборка продакшен версии</p>
 
-### Для разработки
+```bash
+npm run build
+```
 
-Сгенерировать БД согласно `schema.prisma`
+<p>Запуск продакшен версии</p>
+
+```bash
+npm run start
+```
+
+
+<h2>Запуск в докер контейнере</h2>
+
+```bash
+docker build -t web-games .
+```
+
+```bash
+docker run -d -p 3000:3000 --name web-games web-games
+```
+
+<h2>Работа с Prisma ORM</h2>
+Сгенерировать БД согласно ```schema.prisma```
 
 ```bash
 npx prisma generate
-
 ```
 
-Обновить БД согласно `schema.prisma`
-
 Запустить PrismaStudio
-
 ```
 npx prisma studio
 ```
 
-сбросить БД
-
+Cбросить БД
 ```
 npx prisma migrate reset --force
 ```
 
-Снихронизировать `schema.prisma` с БД
+Снихронизировать ```schema.prisma``` с БД
 
 ```
 npx prisma db push
 ```
+<h2>Запуск в докер контейнере</h2>
 
 ```bash
 docker build -t chat-app .
