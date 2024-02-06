@@ -1,3 +1,8 @@
+<h2>О проекте</h2>
+<div>
+  <p>Простой веб мессенджер</p>
+</div>
+
 <h2>Технологии</h2>
 <ul>
   <li>Next.js</li>
@@ -7,6 +12,7 @@
   <li>Tailwind CSS</li>
   <li>Next UI</li>
   <li>PrismaORM</li>
+  <li>SQLite</li>
   <li>Socket.IO</li>
   <li>JWT</li>
 </ul>
@@ -37,6 +43,14 @@ npm run build
 npm run start
 ```
 
+<h2>Конфигурация</h2>
+
+Необходимо создать файл ```.env``` со следующим содержимым
+
+```
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="your-jwt-secret-key"
+```
 
 <h2>Запуск в докер контейнере</h2>
 
@@ -49,7 +63,8 @@ docker run -d -p 3000:3000 --name web-games web-games
 ```
 
 <h2>Работа с Prisma ORM</h2>
-Сгенерировать БД согласно ```schema.prisma```
+
+Сгенерировать БД согласно  ```schema.prisma```
 
 ```bash
 npx prisma generate
