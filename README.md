@@ -1,9 +1,3 @@
-### Скачать
-
-```
-git clone https://github.com/TheHarald/node-assembly-statistics
-```
-
 ### Запуск
 
 - Для запуская необходим Node.js
